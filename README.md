@@ -1,4 +1,4 @@
-# QuickStart Perf Test
+# PerfTest of QuickStart
 
 Let's walk through the steps of creating the app we've been working on above in
 a real world environment.
