@@ -1,4 +1,4 @@
-# Taking QuickStart to Production
+# QuickStart PerfTest
 
 Let's walk through the steps of creating the app we've been working on above in
 a real world environment.
