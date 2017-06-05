@@ -1,6 +1,2 @@
-/ext
-/build
-/node_modules
 /foo.html
-/bootstrap.*
-/webdriver
+/node_modules
