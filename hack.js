@@ -55,12 +55,12 @@ function tick(t){
 }
 
 function sendData(data){
-    fetch(window.location.href, {
+    fetch('/~api', {
         method: 'post',
         body: JSON.stringify(data)
     }).then(function(response){
         response.json().then(function(j){
-            window.location.href = j.redirect;
+            window.location.href = j.redirect; 
         });
     }, function(err){   
         console.log(err)
