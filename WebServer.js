@@ -4,7 +4,7 @@ const $path = require('path');
 var qs = require('querystring');
 const http = require('http');
 const finalhandler = require('finalhandler');
-const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>'
+const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>';
 var port = 80;
 var hostname = '127.0.0.1';
 var reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
@@ -48,6 +48,7 @@ var roots = {
                         success: true,
                         cmd:msg2.cmd
                     }));
+                    
                 });
 
             }else if (req.url.startsWith('/park/')){
@@ -75,6 +76,7 @@ var roots = {
                         success: true,
                         redirect: '/park/'
                     }));
+
                 });
             }
         }
