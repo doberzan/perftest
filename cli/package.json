@@ -1,12 +1,10 @@
 {
-  "name": "perftest",
+  "name": "perftest-cli",
   "version": "1.0.0",
   "description": "Let's walk through the steps of creating the app we've been working on above in a real world environment.",
-  "main": "index.js",
+  "main": "cli.js",
   "dependencies": {
-    "finalhandler": "^1.0.3",
-    "querystring": "^0.2.0",
-    "serve-static": "^1.12.3"
+    "switchit": "^1.0.7"
   },
   "devDependencies": {},
   "scripts": {

@@ -22,29 +22,31 @@ var roots = {
     test1: serveStatic(appPath, {
         'index': ['index.html', 'index.htm']
     }),
+    '~api/messages': function(){},
     '~api': function (req, res){
-        console.log(black + "\n============================================");
-        console.log(blue + "Received post at url: ", green + req.url);
-        console.log(blue + "Agent Info: ", green, req.headers["user-agent"]);
-        console.log(reset);
-        
-        var requestBody = '';
-        req.on('data', function(data) {
-            requestBody += data;
-        });
+          console.log(black + "\n============================================");
+          console.log(blue + "Received post at url: ", green + req.url);
+          console.log(blue + "Agent Info: ", green, req.headers["user-agent"]);
+          console.log(reset);
+          
+          var requestBody = '';
+          req.on('data', function(data) {
+              requestBody += data;
+          });
 
-        req.on('end', function() {
-            var formData = JSON.parse(requestBody);
-            console.log(blue + 'Results after' + green, formData.length + blue + ' seconds.')
-            console.log(green + "FPS: " + blue, requestBody);
-            console.log(black + "============================================\n");
-            console.log(reset);
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({
-                success: true,
-                redirect: '/park/'
-            }));
-        });
+          req.on('end', function() {
+              var formData = JSON.parse(requestBody);
+              console.log(finaldata);
+              console.log(blue + 'Results after' + green, formData.length + blue + ' seconds.');
+              console.log(green + "FPS: " + blue, requestBody);
+              console.log(black + "============================================\n");
+              console.log(reset);
+              res.writeHead(200, {'Content-Type': 'application/json'});
+              res.end(JSON.stringify({
+                  success: true,
+                  redirect: '/park/'
+              }));
+          });
            
     }
 }
@@ -52,16 +54,19 @@ var roots = {
 function setup(){
     var serverServe = serveStatic(__dirname, {
         'index': ['index.html', 'index.htm']
-    })
+    });
     var appServe = serveStatic(appPath, {
         'index': ['index.html', 'index.htm']
-    })
+    });
 
     var server = http.createServer(function onRequest (req, res) {
         var match = /^\/([^\/]+)(\/.*)?/.exec(req.url);
         var root = match && roots[match[1]];
         if(!root){
-            //TODO send redirect to browser via 'res'
+            res.writeHead(302, {
+                'Location': '/park/'
+            });
+            res.end();
         }else{
             req.url = match[2] || '/';
             root(req,res, finalhandler(req, res));
@@ -78,7 +83,9 @@ function setup(){
         }*/
     });
     
-    server.listen(port, hostname, function(){return console.log(plus + blue + ' Started test server on' + green, hostname, blue+ 'at port' + green, port + reset)});
+    server.listen(port, hostname, function(){
+        return console.log(plus + blue + ' Started test server on' + green, hostname, blue+ 'at port' + green, port + reset);
+        });
   }
 
 if (process.argv.length < 4) {
