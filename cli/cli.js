@@ -1,12 +1,8 @@
 const Command = require('switchit').Command;
 const client = require('http');
 
-
-
-
-
-function fetch(server, path, options){
-    var post_data = options.body;
+function fetch(server, path, data){
+    var post_data = JSON.stringify(data);
     //TODO Find a url modual that returns the componant pieces of url
     var post_options = {
         host: server,
@@ -18,13 +14,13 @@ function fetch(server, path, options){
             'Content-Length': Buffer.byteLength(post_data)
         }
     };
-
-    var post_req = http.request(post_options, function(res) {
+    var post_req = client.request(post_options, function(res) {
         res.setEncoding('utf8');
         var responceBody = '';
         res.on('data', function (chunk) {
             responceBody += chunk;
         });
+        
         res.on('end', function () {
             console.log(responceBody);
         });
@@ -35,30 +31,26 @@ function fetch(server, path, options){
   post_req.end();
 
 }
-
-
-
-
-
-
-
-
-
-
 class SayHi extends Command {
     execute (params) {
-        fetch(params.server, '/~api/messages?id=' + params.agent, params.msg);
+        fetch(params.server, '/~api/cmd/', {
+            agent:params.agent,
+            cmd:{
+                id:'echo',
+                data:params.cmd
+            }
+        });
     }
 }
 
 SayHi.define({
-    switches: ['server', 'agent', 'msg'],
-    parameters: ['server', 'agent', 'msg']
+    switches: ['server', 'agent', 'cmd'],
+    parameters: ['server', 'agent', 'cmd']
 });
 
-new SayHi().run().then(function (){
+new SayHi().run();//.then(function (){
     //
-}, 
-function (e){
-    console.log(e.message)
-});
+//}, 
+//function (e){
+//  console.log(e.message)
+//});

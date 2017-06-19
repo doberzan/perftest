@@ -60,7 +60,7 @@ function sendData(data){
         body: JSON.stringify(data)
     }).then(function(response){
         response.json().then(function(j){
-            console.log()
+            console.log(j.redirect);
             window.location.href = j.redirect; 
         });
     }, function(err){   
