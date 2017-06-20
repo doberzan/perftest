@@ -84,15 +84,20 @@ var roots = {
 }
 
 function commander(req, res, timeout){
-    var id = /[?&]id=([^&]+)/.exec(req.url);
-    id = id[1];
-    agents[id] = {
-        id:id,
-        request:req,
-        response:res
-    };
-    console.log(agents.foo.id);
-    console.log(id);
+    try{
+        var id = /[?&]id=([^&]+)/.exec(req.url);
+        id = id[1];
+        console.log(plus, blue + "New client with id: " + green + id);
+        console.log(reset);
+        agents[id] = {
+            id:id,
+            request:req,
+            response:res
+        };
+    }catch(e){
+        console.log("Bad Client");
+        return;
+    }
     setTimeout(function(){
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({
