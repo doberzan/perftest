@@ -84,6 +84,7 @@ var roots = {
 }
 
 function commander(req, res, timeout){
+    try{
     var id = /[?&]id=([^&]+)/.exec(req.url);
     id = id[1];
     agents[id] = {
@@ -101,6 +102,9 @@ function commander(req, res, timeout){
                     }));
         return console.log('sent');
     }, timeout);
+    }catch(e){
+        console.log('Invalid client!');
+    }
 }
 
 function setup(){
