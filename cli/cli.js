@@ -3,13 +3,12 @@ const client = require('http');
 
 function fetch(server, path, data){
     var post_data = JSON.stringify(data);
-    //TODO Find a url modual that returns the componant pieces of url
-    var post_options = {
+    var post_options = {    
         host: server,
         port: '80',
         path: path,
         method: 'POST',
-        headers: {
+        headers: {  
             'Content-Type': 'application/json',
             'Content-Length': Buffer.byteLength(post_data)
         }
@@ -22,33 +21,42 @@ function fetch(server, path, data){
         });
         
         res.on('end', function () {
+            var j = JSON.parse(responceBody)
             console.log(responceBody);
-        });
+            if(j.status == 'ok'){
+                console.log(j.formData);
+            }else{
+                fetch(server, '/~api/park/?id=cli', {
+                    agent:'cli'
+                });
+                return;
+            }
+            console.log(responceBody);
+            });
     });
 
-  // post the data
   post_req.write(post_data);
   post_req.end();
 
 }
-class SayHi extends Command {
+class sendCMD extends Command {
     execute (params) {
-        fetch(params.server, '/~api/cmd/', {
+        fetch(params.server, '/~api/cmd/?id=cli', {
             agent:params.agent,
             cmd:{
-                id:'echo',
-                data:params.cmd
+                id:params.cmd,
+                data:params.args
             }
         });
     }
 }
 
-SayHi.define({
-    switches: ['server', 'agent', 'cmd'],
-    parameters: ['server', 'agent', 'cmd']
+sendCMD.define({
+    switches: ['server', 'agent', 'cmd', 'args'],
+    parameters: ['server', 'agent', 'cmd', 'args']
 });
 
-new SayHi().run();//.then(function (){
+new sendCMD().run();//.then(function (){
     //
 //}, 
 //function (e){

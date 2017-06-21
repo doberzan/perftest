@@ -4,12 +4,14 @@ function getCommands(handlers){
         body: '?'
     }).then(function(response){
         response.json().then(function(j){
-            var handler = handlers[j.cmd.id]
-            if(handler){
-                handler(j.cmd.data)
-                //window.location.href = j.redirect; 
+            if(j){
+                var handler = handlers[j.cmd.id]
+                if(handler){
+                    handler(j.cmd.data)
+                    //window.location.href = j.redirect; 
+                }
             }
-            getCommands(handlers);
+            getCommands(handlers); 
         });
     }, function(err){   
         console.log(err)

