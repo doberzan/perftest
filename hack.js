@@ -21,7 +21,10 @@ function scrollDown(){
         clearInterval(intervalId);
         intervalId = 0;
         console.log(FPS);
-        sendData(FPS);
+        sendData({
+            data:FPS,
+            id:location.search
+        });
     }
     scroller.scrollBy(null, 7);
 }
@@ -61,7 +64,7 @@ function sendData(data){
     }).then(function(response){
         response.json().then(function(j){
             console.log(j.redirect);
-            window.location.href = j.redirect; 
+            location.href = j.redirect + location.search; 
         });
     }, function(err){   
         console.log(err)
