@@ -44,7 +44,9 @@ function runTest(resualts, agent, test){
         }
     }).then(function(){
         //tell test agent to run test
-        return fetch().then(function(data){
+        return fetch(
+            //agent:uuid
+        ).then(function(data){
             console.log(data);
             resualts[agent] = data;
             return fetch("redirect test agent to parking lot");
