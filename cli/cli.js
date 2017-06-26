@@ -43,7 +43,7 @@ let testPages = {
     test2: '/test2/'
 }
 
-function runTest(resualts, agent, test, server){
+function runTest(results, agent, test, server){
     //generate id for test agent uuid  (goto /test/?id='uuid')
     //tell parked agent to go to place to do a test
     let agentUuid = uuidv4();
@@ -67,7 +67,7 @@ function runTest(resualts, agent, test, server){
         }
         ).then(function(data){
             //tell agent to redirect to park
-            resualts[agent] = data;
+            results[agent] = data;
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
                 cmd:{
@@ -83,18 +83,18 @@ function runTests(agents, tests, server){
     agents = agents.split(',');
     tests = tests.split(',');
     let all = [];
-    let resualts = {};
+    let results = {};
     for(let agent of agents){
-        all.push(runTest(resualts, agent, tests, server));
+        all.push(runTest(results, agent, tests, server));
     }
     return Promise.all(all).then(function(){
-        return resualts;
+        return results;
     });
 }
 
 class sendCMD extends Command {
     execute (params) {
-        let logfile = fs.createWriteStream('results.log', {
+        let logfile = fs.createWriteStream('RESULTS.md', {
             flags: 'a'
         })
 
@@ -102,24 +102,13 @@ class sendCMD extends Command {
             console.log('=======================RAW RESULTS=======================');
             console.log(JSON.stringify(results));
             console.log('======================================================');
-            logfile.write('\n\n####################################################');
-            logfile.write('\nTest: ' + params.test + '\n');
-            logfile.write('Raw Results: ' + JSON.stringify(results));
-            logfile.write('\n\n______Averaged Results______\n');
-            console.log('\n______Averaged_____\n');
+            logfile.write('# ' + params.test + '\n');
             for(let i in results) {
-                logfile.write('- ' + i + ': ');
-                console.log('- ' + i + ': ');
-                let sum = 0;
-                for (let j of results[i].fps) {
-                    sum += j;
-                }
-                let average = sum / results[i].fps.length;
-                logfile.write(average + ' fps\n');
-                console.log(average + ' fps\n');
+                logfile.write('\t- ' + i + ': \n');
+                logfile.write('\t\t' + 'MIN: ' + results[i].min + '\n');
+                logfile.write('\t\t' + 'AVG: ' + results[i].avg + '\n');
+                logfile.write('\t\t' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
             }
-            logfile.write('####################################################');
-
         });
     }
 }

@@ -34,13 +34,33 @@ function scrollDown(){
     if(scroller.getMaxPosition().y == scroller.getPosition().y){
         console.log(FPS);
         console.log('done');
-        return {
-            //min:TODO,
-            //avg:TODO,
-            fps:FPS
-        };
+        return calculate();
     }
     scroller.scrollBy(null, 7);
+}
+
+//Calculates data
+function calculate(){
+    let min = 9999999;
+    let avg;
+    let fps = FPS;
+    let sum = 0;
+
+    for (let j of fps) {
+        if(min > j){
+            min = j;
+        }
+        sum += j;
+    }
+    avg = sum / fps.length;
+
+
+
+    return {
+        min:min,
+        avg:avg,
+        fps:fps
+    };
 }
 
 
