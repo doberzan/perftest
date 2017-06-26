@@ -1,10 +1,11 @@
 const Command = require('switchit').Command;
 const client = require('http');
-
+const uuidv4 = require('uuid/v4');
+const fs = require('fs');
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
-        var post_data = JSON.stringify(data);
-        var post_options = {    
+        let post_data = JSON.stringify(data);
+        let post_options = {
             host: server,
             port: '80',
             path: path,
@@ -14,52 +15,77 @@ function fetch(server, path, data){
                 'Content-Length': Buffer.byteLength(post_data)
             }
         };
-        var post_req = client.request(post_options, function(res) {
+        let post_req = client.request(post_options, function(res) {
             res.setEncoding('utf8');
-            var responceBody = '';
+            let responceBody = '';
             res.on('data', function (chunk) {
                 responceBody += chunk;
             });
             
             res.on('end', function () {
-                var j = JSON.parse(responceBody);
+                try{
+                let j = JSON.parse(responceBody);
                 resolve(j);
+                }catch(e){
+                    console.log('Failed to parse:',responceBody);
+                }
             });
         });
 
         post_req.write(post_data);
-        post_req.end();
     });
 
 }
 
-function runTest(resualts, agent, test){
-    //generate id for test agent uuid  (goto /test1/?id='uuid')
+
+let testPages = {
+    test1: '/test1/',
+    test2: '/test2/'
+}
+
+function runTest(resualts, agent, test, server){
+    //generate id for test agent uuid  (goto /test/?id='uuid')
     //tell parked agent to go to place to do a test
-    return fetch(params.server, '/~api/cmd/', {
-        agent:params.agent,
+    let agentUuid = uuidv4();
+
+    return fetch(server, '/~api/cmd/', {
+        agent:agent,
         cmd:{
-            type:params.cmd,
-            data:params.args
+            type:'redirect',
+            data:testPages[test] + '?id=' + agentUuid
         }
     }).then(function(){
+        //connect back to hack.js
         //tell test agent to run test
-        return fetch(
-            //agent:uuid
+        console.log(agentUuid);
+        return fetch(server, '/~api/cmd/',{
+            agent:agentUuid,
+            cmd:{
+                type:test,
+                data:test
+            }
+        }
         ).then(function(data){
-            console.log(data);
+            //tell agent to redirect to park
             resualts[agent] = data;
-            return fetch("redirect test agent to parking lot");
+            return fetch(server, '/~api/cmd/',{
+                agent:agentUuid,
+                cmd:{
+                    type:'redirect',
+                    data:'/park/?id=' + agent
+                }
+            });
         })
     })
 }
 
-function runTests(agents, test){
+function runTests(agents, tests, server){
     agents = agents.split(',');
-    var all = [];
-    var resualts = {};
-    for(var agent of agents){
-        all.push(runTest(resualts, agent, test));
+    tests = tests.split(',');
+    let all = [];
+    let resualts = {};
+    for(let agent of agents){
+        all.push(runTest(resualts, agent, tests, server));
     }
     return Promise.all(all).then(function(){
         return resualts;
@@ -68,31 +94,39 @@ function runTests(agents, test){
 
 class sendCMD extends Command {
     execute (params) {
-        //runTests(stuff).then(function(resualts){});
-        return fetch(params.server, '/~api/cmd/', {
-            agent:params.agent,
-            cmd:{
-                type:params.cmd,
-                data:params.args
-            }
-        }).then(function(response){
-            if(response.status == 'ok'){
-                    console.log(response.formData);
-                }else if(response.status == 'failed'){
-                    console.log('[Error] No client by that id!');
+        let logfile = fs.createWriteStream('results.log', {
+            flags: 'a'
+        })
+
+        return runTests(params.agent, params.test, params.server).then(function(results){
+            console.log('=======================RAW RESULTS=======================');
+            console.log(JSON.stringify(results));
+            console.log('======================================================');
+            logfile.write('\n\n####################################################');
+            logfile.write('\nTest: ' + params.test + '\n');
+            logfile.write('Raw Results: ' + JSON.stringify(results));
+            logfile.write('\n\n______Averaged Results______\n');
+            console.log('\n______Averaged_____\n');
+            for(let i in results) {
+                logfile.write('- ' + i + ': ');
+                console.log('- ' + i + ': ');
+                let sum = 0;
+                for (let j of results[i].fps) {
+                    sum += j;
                 }
+                let average = sum / results[i].fps.length;
+                logfile.write(average + ' fps\n');
+                console.log(average + ' fps\n');
+            }
+            logfile.write('####################################################');
+
         });
     }
 }
 
 sendCMD.define({
-    switches: ['server', 'agent', 'cmd', 'args'],
-    parameters: ['server', 'agent', 'cmd', 'args']
+    switches: ['server', 'agent' , 'test'],
+    parameters: ['server', 'agent', 'test']
 });
 
-new sendCMD().run();//.then(function (){
-    //
-//}, 
-//function (e){
-//  console.log(e.message)
-//});
+new sendCMD().run();

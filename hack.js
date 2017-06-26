@@ -1,82 +1,109 @@
-var intervalId;
-var timebase;
-var tickCount = 0; 
-var FPS = [];
+let timebase;
+let tickCount = 0;
+let FPS = [];
 
-function doTests(){
-    var cmp = Ext.getCmp('thegrid');
+function runTest(test, resolve, reject){
+    let cmp = Ext.getCmp('thegrid');
     if(!cmp){
-        setTimeout(doTests, 50);
-        return
+        setTimeout(function(){
+            runTest(test, resolve, reject);
+        }, 50);
+        return;
     }
-    requestAnimationFrame(tick);
-    intervalId = setInterval(scrollDown,1);
+    console.log('done1');
+     let intervalId = setInterval(function(){
+        let result = test();
+        if(result){
+            clearInterval(intervalId);
+            cancelAnimationFrame(animId);
+            resolve(result);
+        }
+    }, 1)
+    let animId = requestAnimationFrame(function tock(t){
+        tick(t);
+        animId = requestAnimationFrame(tock);
+    });
+
 }
 
+//clear
+
 function scrollDown(){
-    var cmp = Ext.getCmp('thegrid');
-    var num = 1;
-    var scroller = cmp.getScrollable();
+    let cmp = Ext.getCmp('thegrid');
+    let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y == scroller.getPosition().y){
-        clearInterval(intervalId);
-        intervalId = 0;
         console.log(FPS);
-        sendData({
-            data:FPS,
-            id:location.search
-        });
+        console.log('done');
+        return {
+            //min:TODO,
+            //avg:TODO,
+            fps:FPS
+        };
     }
     scroller.scrollBy(null, 7);
 }
 
+
 function scrollUp(){
-    var cmp = Ext.getCmp('thegrid');
-    var num = 1;
-    var scroller = cmp.getScrollable();
+    let cmp = Ext.getCmp('thegrid');
+    let scroller = cmp.getScrollable();
     if(0 == scroller.getPosition().y){
-        clearInterval(intervalId);
+        console.log(FPS);
+        console.log('done');
+        return {
+            fps:FPS
+        };
     }
     scroller.scrollBy(null, -7);
 }
+
+
+
 
 function tick(t){
     if(!timebase){
         timebase = t;
     }else{
         tickCount ++;
-        var deltaT = (t-timebase) / 1000;
+        let deltaT = (t-timebase) / 1000;
         if(deltaT > 1){
-            var fps = Math.round(tickCount / deltaT);
+            let fps = Math.round(tickCount / deltaT);
             FPS.push(fps);
             tickCount = 0;
             timebase = t;
         }
     }
-    if(intervalId){
-        requestAnimationFrame(tick)
-    };
 }
 
-function sendData(data){
-    fetch('/~api', {
-        method: 'post',
-        body: JSON.stringify(data)
-    }).then(function(response){
-        response.json().then(function(j){
-            console.log(j.redirect);
-            location.href = j.redirect + location.search; 
-        });
-    }, function(err){   
-        console.log(err)
+
+function start(){
+    getCommands({
+        echo:function(data){
+            console.log(data);
+        },
+        test1:function(){
+            return new Promise(function(resolve, reject){
+                runTest(scrollDown,resolve, reject);
+            });
+        },
+        test2:function(){
+            return new Promise(function(resolve, reject){
+                runTest(scrollUp,resolve, reject);
+            });
+        },
+        redirect:function(test){
+            location.href = test;
+        }
     });
 }
 
+
 window.onload = function(){
     if(Ext.onReady){
-        Ext.onReady(doTests);
+        Ext.onReady(start);
     }else{
         Ext._beforereadyhandler = function(){
-            Ext.onReady(doTests);
+            Ext.onReady(start);
         }
     }
 };

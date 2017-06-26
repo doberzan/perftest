@@ -4,7 +4,9 @@
   "description": "Let's walk through the steps of creating the app we've been working on above in a real world environment.",
   "main": "cli.js",
   "dependencies": {
-    "switchit": "^1.0.7"
+    "fs": "0.0.1-security",
+    "switchit": "^1.0.7",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {},
   "scripts": {

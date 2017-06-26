@@ -3,6 +3,8 @@ getCommands({
         console.log(data);
     },
     redirect:function(test){
+        console.log(test);
         location.href = test;
+        return true;
     }
-});
+}    );
