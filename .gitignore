@@ -1,2 +1,4 @@
 /foo.html
 node_modules
+/.idea
+results.log
