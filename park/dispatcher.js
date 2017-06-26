@@ -30,7 +30,7 @@ function getCommands(handlers, data){
             }
             getCommands(handlers); 
         });
-    }, function(err){   
-        console.log(err)
+    }, function(e){
+        console.log(e)
     });
 }
