@@ -57,7 +57,7 @@ function runTest(results, agent, test, server){
     }).then(function(){
         //connect back to hack.js
         //tell test agent to run test
-        console.log(agentUuid);
+        console.log('Sending agent \'' + agent + '\' uuid \'' +  agentUuid + '\'');
         return fetch(server, '/~api/cmd/',{
             agent:agentUuid,
             cmd:{
