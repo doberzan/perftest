@@ -1,8 +1,11 @@
+let timerid = 0;
 function getCommands(handlers, data){
+    timerid = setTimeout(lostConnection, 65000);
     fetch('/~api/park/' + location.search, {
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
+        clearTimeout(timerid);
         response.json().then(function(j){
             if(j.type){
                 let handler = handlers[j.type]
@@ -31,6 +34,10 @@ function getCommands(handlers, data){
             getCommands(handlers); 
         });
     }, function(e){
-        console.log(e)
+        console.log(e);
     });
+}
+
+function lostConnection(){
+    location.href = '/park/' + location.search;
 }
