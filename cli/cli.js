@@ -112,17 +112,10 @@ class sendCMD extends Command {
             logfile.write('# ' + params.test + '\n');
             //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
             for(let i in results) {
-<<<<<<< HEAD
-                logfile.write(' - ' + i + ': \n');
-                logfile.write('  ' + 'MIN: ' + results[i].min + '\n');
-                logfile.write('  ' + 'AVG: ' + results[i].avg + '\n');
-                logfile.write('  ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
-=======
                 logfile.write('## ' + i + ': \n');
                 logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
                 logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
                 logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
->>>>>>> b471e1170354c7830dbdad85ef63c7dcfdb50c98
             }
         });
     }

