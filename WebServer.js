@@ -33,7 +33,7 @@ let roots = {
     },
     '~api': function (req, res){
         if(req.method == 'POST'){
-            let logfile = fs.createWriteStream('RESULTS.md', {
+            let logfile = fs.createWriteStream('ServerLog.log', {
             flags: 'a'
             })
             var time = ('\n' + h + ':' + minutes + ':' + sec)
