@@ -57,7 +57,7 @@ function runTest(results, agent, test, server){
     }).then(function(){
         //connect back to hack.js
         //tell test agent to run test
-        console.log(agentUuid);
+        console.log('Sending agent \'' + agent + '\' uuid \'' +  agentUuid + '\'');
         return fetch(server, '/~api/cmd/',{
             agent:agentUuid,
             cmd:{
@@ -110,12 +110,19 @@ class sendCMD extends Command {
             console.log(JSON.stringify(results));
             console.log('======================================================');
             logfile.write('# ' + params.test + '\n');
-            logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
+            //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
             for(let i in results) {
+<<<<<<< HEAD
                 logfile.write(' - ' + i + ': \n');
                 logfile.write('  ' + 'MIN: ' + results[i].min + '\n');
                 logfile.write('  ' + 'AVG: ' + results[i].avg + '\n');
                 logfile.write('  ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
+=======
+                logfile.write('## ' + i + ': \n');
+                logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
+                logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
+                logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
+>>>>>>> b471e1170354c7830dbdad85ef63c7dcfdb50c98
             }
         });
     }
