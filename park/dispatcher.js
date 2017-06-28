@@ -48,17 +48,17 @@ function getOS() {
     var ua = navigator.userAgent.toLowerCase();
     if (ua.indexOf("win") != -1) {
         return "win";
+    } else if (ua.indexOf("iphone") != -1) {
+        return "iphone";
     } else if (ua.indexOf("macintosh") != -1) {
-        return "mac";
+        return 'mac';
     } else if (ua.indexOf("linux") != -1) {
         return "linux";
     } else if (ua.indexOf("x11") != -1) {
         return "unix";
     } else if (ua.indexOf("ipad") != -1) {
         return "ipad";
-    }else if (ua.indexOf("iphone") != -1) {
-        return "iphone";
-    }else {
+    } else {
         return "computer";
     }
 }
