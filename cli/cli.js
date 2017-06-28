@@ -108,13 +108,15 @@ class sendCMD extends Command {
                 flags: 'a'
             })
             return runTests(params.agent, params.test, params.server).then(function(results){
-                console.log('=======================RAW RESULTS=======================');
-                console.log(JSON.stringify(results));
-                console.log('======================================================');
                 logfile.write('# ' + params.test + '\n');
+                console.log('# ' + params.test + '\n');
                 //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
                 for(let i in results) {
-                    logfile.write('## ' + i + ': \n');
+                    console.log('## ' + i);
+                    console.log(' - ' + 'MIN: ' + results[i].min);
+                    console.log(' - ' + 'AVG: ' + results[i].avg);
+                    console.log(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n');
+                    logfile.write('## ' + i + '\n');
                     logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
                     logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
                     logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');

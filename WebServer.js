@@ -237,8 +237,6 @@ if (process.argv.length < 4) {
 
 
 
-
-
 /*if (req.url == '/' || req.url == '/index.html') {
             let data = fs.readFileSync(__dirname + 'index.html','utf-8');
             let data2 = data.split('</head>');
