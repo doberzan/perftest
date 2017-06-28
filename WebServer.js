@@ -60,7 +60,6 @@ let roots = {
     }
 }
 
-
 function getAgent (id) {
     return agents[id] || (agents[id] = {
         id: id,
@@ -141,8 +140,14 @@ function cliHandler(req, res){
         msg += data;
     });
     req.on('end', function() {
-        let cmdObj = JSON.parse(msg);
-        let agent = getAgent(cmdObj.agent);
+        cliForwardMSG(msg, res, req);
+    });
+}
+
+function cliForwardMSG(msg, res, req){
+    let cmdObj = JSON.parse(msg);
+    let agent = getAgent(cmdObj.agent);
+    if(cmdObj.cmd.type != 'list'){
         console.log(black + "\n============================================");
         console.log(blue + "Received command to forward to client/s:", green + cmdObj.agent);
         console.log(blue + 'Queueing message:', green + msg);
@@ -157,26 +162,16 @@ function cliHandler(req, res){
             clientRequest: req
         });
         flushAgentMessage(agent);
-    });
-}
-
-
-function xcommander(req, res, timeout){
-    try{
-        let id = /[?&]id=([^&]+)/.exec(req.url);
-        id = id[1];
-        setTimeout(function(){
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({
-                            status: 'wait',
-                            redirect: '/park/'
-                        }));
-            return console.log('reconnect');
-        }, timeout);
-    }catch(e){
-        console.log('Bad client id!');
+    }else{
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        agentsByID = [];
+        for(a in agents){
+            agentsByID.push(agents[a].id);
+        }
+        res.end(JSON.stringify(agentsByID));
     }
 }
+
 
 
 function setup(){

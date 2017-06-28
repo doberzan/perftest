@@ -94,30 +94,33 @@ function runTests(agents, tests, server){
 
 class sendCMD extends Command {
     execute (params) {
-        let logfile = fs.createWriteStream('RESULTS.md', {
-            flags: 'a'
-        })
-
-        return runTests(params.agent, params.test, params.server).then(function(results){
-            const date = new Date();
-            let h = date.getHours();
-            let m = date.getMonth();
-            let minutes = date.getMinutes();
-            let sec = date.getSeconds();
-            let d = date.getDay();
-            let y = date.getFullYear();
-            console.log('=======================RAW RESULTS=======================');
-            console.log(JSON.stringify(results));
-            console.log('======================================================');
-            logfile.write('# ' + params.test + '\n');
-            //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
-            for(let i in results) {
-                logfile.write('## ' + i + ': \n');
-                logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
-                logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
-                logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
-            }
-        });
+        if(params.test == 'list'){
+            fetch(params.server, '/~api/cmd/',{
+                cmd:{
+                    type:params.test,
+                    data:params.test
+                }
+            }).then(function(data){ 
+                console.log(data)
+            });
+        }else{
+            let logfile = fs.createWriteStream('RESULTS.md', {
+                flags: 'a'
+            })
+            return runTests(params.agent, params.test, params.server).then(function(results){
+                console.log('=======================RAW RESULTS=======================');
+                console.log(JSON.stringify(results));
+                console.log('======================================================');
+                logfile.write('# ' + params.test + '\n');
+                //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
+                for(let i in results) {
+                    logfile.write('## ' + i + ': \n');
+                    logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
+                    logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
+                    logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
+                }
+            });
+        }
     }
 }
 

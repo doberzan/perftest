@@ -1,6 +1,6 @@
 let timerid = 0;
 function getCommands(handlers, data){
-    timerid = setTimeout(lostConnection, 65000);
+    timerid = setTimeout(lostConnection, 10000);
     fetch('/~api/park/' + location.search, {
         method: 'post',
         body: JSON.stringify(data || {})
@@ -28,7 +28,6 @@ function getCommands(handlers, data){
                         id:j.id
                     });
                     return;
-                    //location.href = j.redirect; 
                 }
             }
             getCommands(handlers); 
@@ -39,5 +38,25 @@ function getCommands(handlers, data){
 }
 
 function lostConnection(){
-    location.href = '/park/' + location.search;
+    location.href = '/park/?id=' + getOS();
+
+}
+
+function getOS() {
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("win") != -1) {
+        return "win";
+    } else if (ua.indexOf("macintosh") != -1) {
+        return "mac";
+    } else if (ua.indexOf("linux") != -1) {
+        return "linux";
+    } else if (ua.indexOf("x11") != -1) {
+        return "unix";
+    } else if (ua.indexOf("ipad") != -1) {
+        return "ipad";
+    }else if (ua.indexOf("iphone") != -1) {
+        return "iphone";
+    }else {
+        return "computer";
+    }
 }
