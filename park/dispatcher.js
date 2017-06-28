@@ -1,11 +1,12 @@
 let timerid = 0;
+let agentId = /[?&]id=([^&]+)/.exec(location.search);
+agentId = agentId ? agentId[1] : getOS();
+
 function getCommands(handlers, data){
-    timerid = setTimeout(lostConnection, 10000);
-    fetch('/~api/park/' + location.search, {
+    fetch('/~api/park/?id=' + agentId, {
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
-        clearTimeout(timerid);
         response.json().then(function(j){
             if(j.type){
                 let handler = handlers[j.type]
@@ -30,16 +31,17 @@ function getCommands(handlers, data){
                     return;
                 }
             }
+            if(handlers.nop){
+                handlers.nop();
+            }
             getCommands(handlers); 
         });
     }, function(e){
         console.log(e);
+        setTimeout(function(){
+            getCommands(handlers);
+        }, 30 * 1000);
     });
-}
-
-function lostConnection(){
-    location.href = '/park/?id=' + getOS();
-
 }
 
 function getOS() {

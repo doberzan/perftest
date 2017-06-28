@@ -11,6 +11,9 @@ let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", 
 let plus = (black + "[" + green + "+" + black +"]");
 let appPath = "/Users/declan/Sencha/QuickStart/";
 let agents = {}
+let logfile = fs.createWriteStream('ServerLog.log', {
+    flags: 'a'
+})
 let roots = {
     park: serveStatic( $path.resolve(__dirname, 'park'),{
         'index': ['index.html', 'index.htm']
@@ -29,20 +32,21 @@ let roots = {
     },
     '~api': function (req, res){
         if(req.method == 'POST'){
-            let logfile = fs.createWriteStream('ServerLog.log', {
-            flags: 'a'
-        })
             let date = new Date();
             let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
-            console.log(black + "\n============================================");
-            console.log(blue +  "Received post at url: ", green + req.url);
-            console.log(blue +  "Agent Info: ", green, req.headers["user-agent"]);
-            console.log(black + "============================================\n" + reset);
-            //logfile
-            logfile.write(time + " ============================================");
-            logfile.write(time + " Received post at url: " + req.url);
-            logfile.write(time + " Agent Info: " + req.headers["user-agent"]);
-            logfile.write(time + " ============================================\n");
+          
+            if(getFilesizeInBytes('ServerLog.log') > 10490000000){ //10MB
+                var readStream = fs.createReadStream('ServerLog.log', 'utf8');
+                var data;
+                readStream.on('data', function(chunk) {  
+                    data += chunk;
+                }).on('end', function() {
+                    cutLog(data);
+                });
+            }
+
+            logfile.write(time + " Agent Connected: " + req.headers["user-agent"]);
+
             if(req.url.startsWith('/cmd/')){
                 cliHandler(req, res);
             }else if (req.url.startsWith('/park/')){
@@ -58,6 +62,28 @@ let roots = {
             return;
         }
     }
+}
+
+function cutLog(data){
+    var text = data;
+    var logtext = text.split('\n');
+    var writeStream = fs.createWriteStream('ServerLog.log', {
+        flags: 'w'
+    })
+    var num = 2000;
+    for(var line of logtext){
+        if(num != 0){
+            num --;
+        }else{
+            writeStream.write(line + '\n');
+        }
+    }
+}
+
+function getFilesizeInBytes(filename) {
+    const stats = fs.statSync(filename)
+    const fileSizeInBytes = stats.size
+    return fileSizeInBytes
 }
 
 function getAgent (id) {
@@ -77,7 +103,6 @@ function flushAgentMessage (agent) {
                 clearTimeout(agent.timerId);
                 agent.timerId = null;
             }
-            //console.log('clientMessage.data.id:',clientMessage.data.id);
             agent.pending[clientMessage.data.id] = clientMessage;
             agent.response.writeHead(200, {'Content-Type': 'application/json'});
             agent.response.end(JSON.stringify(clientMessage.data));
@@ -102,7 +127,6 @@ function flushAgentMessage (agent) {
 function commander(req, res){
     try {
         let id = /[?&]id=([^&]+)/.exec(req.url);
-        //console.log(req.url);
         id = id[1];
         let agent = getAgent(id);
         let requestBody = '';
@@ -111,24 +135,19 @@ function commander(req, res){
         });
 
         req.on('end', function () {
-            //console.log('1',requestBody);
             let reply = JSON.parse(requestBody);
 
             //Tell CLI data
             if (reply && reply.id) {
                 let client = agent.pending[reply.id];
                 delete agent.pending[reply.id];
-                //console.log('12',reply);
                 client.clientResponse.writeHead(200, {'Content-Type': 'application/json'});
-                //console.log('123',reply.data);
                 client.clientResponse.end(JSON.stringify(reply.data));
             }
 
             agent.request = req;
             agent.response = res;
             flushAgentMessage(agent);
-
-
         });
     }catch(e){console.log("Not a url...")}
 }
@@ -162,6 +181,9 @@ function cliForwardMSG(msg, res, req){
             clientRequest: req
         });
         flushAgentMessage(agent);
+        let date = new Date();
+        let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
+        logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');
     }else{
         res.writeHead(200, {'Content-Type': 'application/json'});
         agentsByID = [];
@@ -212,6 +234,7 @@ if (process.argv.length < 4) {
     setup();
     console.log(reset);
 }
+
 
 
 

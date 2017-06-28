@@ -1,6 +1,7 @@
 let timebase;
 let tickCount = 0;
 let FPS = [];
+let num = 0;
 
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
@@ -113,10 +114,17 @@ function start(){
         },
         redirect:function(test){
             location.href = test;
+        },
+        nop:function(){
+            num ++;
+            console.log(num);
+            if(num > 1){
+                location.href = '/park/';
+                num = 0;
+            }
         }
     });
 }
-
 
 window.onload = function(){
     if(Ext.onReady){
