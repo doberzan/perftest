@@ -35,7 +35,7 @@ let roots = {
             let date = new Date();
             let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
           
-            if(getFilesizeInBytes('ServerLog.log') > 10490000000){ //10MB
+            if(getFilesizeInBytes('ServerLog.log') > 1049 * 1000 * 10000){ //10MB
                 var readStream = fs.createReadStream('ServerLog.log', 'utf8');
                 var data;
                 readStream.on('data', function(chunk) {  
@@ -91,14 +91,27 @@ function getAgent (id) {
         id: id,
         queue: [],
         pending: {},
-        seq: 0
+        seq: 0,
+        isHere:true
     });
+}
+
+function askToSend(agent){
+    if(agent.isHere){
+        flushAgentMessage(agent);
+    }else{
+        setTimeout(function(){
+            askToSend(agent);
+        }, 1000);
+    }
 }
 
 function flushAgentMessage (agent) {
     if (agent.response) {
         let clientMessage = agent.queue.shift();
         if (clientMessage) {
+            console.log('agent: ' + agent.id + ' running command:');
+            console.log(clientMessage.data);
             if(agent.timerId){
                 clearTimeout(agent.timerId);
                 agent.timerId = null;
@@ -106,6 +119,9 @@ function flushAgentMessage (agent) {
             agent.pending[clientMessage.data.id] = clientMessage;
             agent.response.writeHead(200, {'Content-Type': 'application/json'});
             agent.response.end(JSON.stringify(clientMessage.data));
+            if(clientMessage.data.type == 'redirect'){
+                agent.isHere = false;
+            }
             agent.request = agent.response = null;
             return true;
         }
@@ -116,10 +132,13 @@ function flushAgentMessage (agent) {
                                 status: 'wait',
                                 redirect: '/park/'
                             }));
+                agent.isHere = true;
                 agent.request = agent.response = agent.timerId = null;
             }, 60000);
         }
+        return true;
     }
+    console.log('failed')
     return false;
 }
 
@@ -147,7 +166,7 @@ function commander(req, res){
 
             agent.request = req;
             agent.response = res;
-            flushAgentMessage(agent);
+            flushAgentMessage(agent)
         });
     }catch(e){console.log("Not a url...")}
 }
@@ -180,7 +199,15 @@ function cliForwardMSG(msg, res, req){
             clientResponse: res,
             clientRequest: req
         });
-        flushAgentMessage(agent);
+        let b = getAgent(cmdObj.agent);
+        if(b.queue){
+            for(c of b.queue){
+                console.log(cmdObj.agent + ':');
+                console.log(c.data);
+            }
+        }
+        //make sure agent is here before sending
+        askToSend(agent);
         let date = new Date();
         let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
         logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');

@@ -11,7 +11,6 @@ function runTest(test, resolve, reject){
         }, 50);
         return;
     }
-    console.log('done1');
      let intervalId = setInterval(function(){
         let result = test();
         if(result){
@@ -34,7 +33,6 @@ function scrollDown(){
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y == scroller.getPosition().y){
         console.log(FPS);
-        console.log('done');
         return calculate();
     }
     scroller.scrollBy(null, 7);
@@ -70,7 +68,6 @@ function scrollUp(){
     let scroller = cmp.getScrollable();
     if(0 == scroller.getPosition().y){
         console.log(FPS);
-        console.log('done');
         return {
             fps:FPS
         };

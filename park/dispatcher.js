@@ -9,6 +9,7 @@ function getCommands(handlers, data){
     }).then(function(response){
         response.json().then(function(j){
             if(j.type){
+                console.log(j.type);
                 let handler = handlers[j.type]
                 if(handler){
                     let result = handler(j.data);
