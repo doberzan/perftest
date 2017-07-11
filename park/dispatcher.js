@@ -7,6 +7,15 @@ function getCommands(handlers, data){
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
+        function next(result, j){
+            if(result !== false){
+                getCommands(handlers, {
+                    type:'result',
+                    data:result,
+                    id:j.id
+                });
+            }
+        }
         response.json().then(function(j){
             if(j.type){
                 console.log(j.type);
@@ -16,19 +25,11 @@ function getCommands(handlers, data){
                     if(result && result.then){
                         result.then(function(resultData){
                             console.log(resultData);
-                            getCommands(handlers, {
-                                type:'result',
-                                data:resultData || {},
-                                id:j.id
-                            });
+                            next(resultData, j);
                         });
                         return;
                     }
-                    getCommands(handlers, {
-                        type:'result',
-                        data:result || {},
-                        id:j.id
-                    });
+                    next(result, j);
                     return;
                 }
             }

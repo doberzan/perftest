@@ -111,6 +111,7 @@ function start(){
         },
         redirect:function(test){
             location.href = test;
+            return 'redirected';
         },
         nop:function(){
             num ++;

@@ -5,6 +5,6 @@ getCommands({
     redirect:function(test){
         console.log(test);
         location.href = test;
-        return true;
+        return false;
     }
 }    );
