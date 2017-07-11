@@ -17,17 +17,20 @@ function fetch(server, path, data){
         };
         let post_req = client.request(post_options, function(res) {
             res.setEncoding('utf8');
-            let responceBody = '';
+            let responseBody = '';
             res.on('data', function (chunk) {
-                responceBody += chunk;
+                responseBody += chunk;
             });
             
             res.on('end', function () {
                 try{
-                let j = JSON.parse(responceBody);
-                resolve(j);
+                    console.log(responseBody);
+                    let j = JSON.parse(responseBody);
+                    resolve(j);
                 }catch(e){
-                    console.log('Failed to parse:',responceBody);
+                    resolve(undefined);
+                    console.log(e);
+                    console.log('Failed to parse:', responseBody);
                 }
             });
         });
@@ -47,36 +50,36 @@ function runTest(results, agent, test, server){
     //generate id for test agent uuid  (goto /test/?id='uuid')
     //tell parked agent to go to place to do a test
     let agentUuid = uuidv4();
-
-    return fetch(server, '/~api/cmd/', {
+    console.log('Sending agent \'' + agent + '\' with uuid: \'' +  agentUuid + '\' to run test: ' + '\'' + test + '\'');
+    fetch(server, '/~api/cmd/', {
         agent:agent,
         cmd:{
             type:'redirect',
             data:testPages[test] + '?id=' + agentUuid
         }
-    }).then(function(){
-        //connect back to hack.js
-        //tell test agent to run test
-        console.log('Sending agent \'' + agent + '\' with uuid: \'' +  agentUuid + '\' to run test: ' + '\'' + test + '\'');
+        //needs a reply
+    })
+    //connect back to hack.js
+    //tell test agent to run test
+    return fetch(server, '/~api/cmd/',{
+        agent:agentUuid,
+        cmd:{
+            type:test,
+            data:test
+        }
+    }
+    ).then(function(data){
+        //tell agent to redirect to park
+        results[agent] = data;
         return fetch(server, '/~api/cmd/',{
             agent:agentUuid,
             cmd:{
-                type:test,
-                data:test
+                type:'redirect',
+                data:'/park/?id=' + agent
             }
-        }
-        ).then(function(data){
-            //tell agent to redirect to park
-            results[agent] = data;
-            return fetch(server, '/~api/cmd/',{
-                agent:agentUuid,
-                cmd:{
-                    type:'redirect',
-                    data:'/park/?id=' + agent
-                }
-            });
-        })
+        });
     })
+    
 }
 
 function runTests(agents, tests, server){
