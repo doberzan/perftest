@@ -1,13 +1,15 @@
 let timerid = 0;
+let agentId = /[?&]id=([^&]+)/.exec(location.search);
+agentId = agentId ? agentId[1] : getOS();
+
 function getCommands(handlers, data){
-    timerid = setTimeout(lostConnection, 65000);
-    fetch('/~api/park/' + location.search, {
+    fetch('/~api/park/?id=' + agentId, {
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
-        clearTimeout(timerid);
         response.json().then(function(j){
             if(j.type){
+                console.log(j.type);
                 let handler = handlers[j.type]
                 if(handler){
                     let result = handler(j.data);
@@ -28,16 +30,36 @@ function getCommands(handlers, data){
                         id:j.id
                     });
                     return;
-                    //location.href = j.redirect; 
                 }
+            }
+            if(handlers.nop){
+                handlers.nop();
             }
             getCommands(handlers); 
         });
     }, function(e){
         console.log(e);
+        setTimeout(function(){
+            getCommands(handlers);
+        }, 30 * 1000);
     });
 }
 
-function lostConnection(){
-    location.href = '/park/' + location.search;
+function getOS() {
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("win") != -1) {
+        return "win";
+    } else if (ua.indexOf("iphone") != -1) {
+        return "iphone";
+    } else if (ua.indexOf("macintosh") != -1) {
+        return 'mac';
+    } else if (ua.indexOf("linux") != -1) {
+        return "linux";
+    } else if (ua.indexOf("x11") != -1) {
+        return "unix";
+    } else if (ua.indexOf("ipad") != -1) {
+        return "ipad";
+    } else {
+        return "computer";
+    }
 }

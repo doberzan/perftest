@@ -11,6 +11,9 @@ let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", 
 let plus = (black + "[" + green + "+" + black +"]");
 let appPath = "/Users/declan/Sencha/QuickStart/";
 let agents = {}
+let logfile = fs.createWriteStream('ServerLog.log', {
+    flags: 'a'
+})
 let roots = {
     park: serveStatic( $path.resolve(__dirname, 'park'),{
         'index': ['index.html', 'index.htm']
@@ -29,20 +32,21 @@ let roots = {
     },
     '~api': function (req, res){
         if(req.method == 'POST'){
-            let logfile = fs.createWriteStream('ServerLog.log', {
-            flags: 'a'
-        })
             let date = new Date();
             let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
-            console.log(black + "\n============================================");
-            console.log(blue +  "Received post at url: ", green + req.url);
-            console.log(blue +  "Agent Info: ", green, req.headers["user-agent"]);
-            console.log(black + "============================================\n" + reset);
-            //logfile
-            logfile.write(time + " ============================================");
-            logfile.write(time + " Received post at url: " + req.url);
-            logfile.write(time + " Agent Info: " + req.headers["user-agent"]);
-            logfile.write(time + " ============================================\n");
+          
+            if(getFilesizeInBytes('ServerLog.log') > 1049 * 1000 * 10000){ //10MB
+                var readStream = fs.createReadStream('ServerLog.log', 'utf8');
+                var data;
+                readStream.on('data', function(chunk) {  
+                    data += chunk;
+                }).on('end', function() {
+                    cutLog(data);
+                });
+            }
+
+            logfile.write(time + " Agent Connected: " + req.headers["user-agent"]);
+
             if(req.url.startsWith('/cmd/')){
                 cliHandler(req, res);
             }else if (req.url.startsWith('/park/')){
@@ -60,29 +64,64 @@ let roots = {
     }
 }
 
+function cutLog(data){
+    var text = data;
+    var logtext = text.split('\n');
+    var writeStream = fs.createWriteStream('ServerLog.log', {
+        flags: 'w'
+    })
+    var num = 2000;
+    for(var line of logtext){
+        if(num != 0){
+            num --;
+        }else{
+            writeStream.write(line + '\n');
+        }
+    }
+}
+
+function getFilesizeInBytes(filename) {
+    const stats = fs.statSync(filename)
+    const fileSizeInBytes = stats.size
+    return fileSizeInBytes
+}
 
 function getAgent (id) {
     return agents[id] || (agents[id] = {
         id: id,
         queue: [],
         pending: {},
-        seq: 0
+        seq: 0,
+        isHere:true
     });
 }
 
+function askToSend(agent){
+    if(agent.isHere){
+        flushAgentMessage(agent);
+    }else{
+        setTimeout(function(){
+            askToSend(agent);
+        }, 1000);
+    }
+}
 
 function flushAgentMessage (agent) {
     if (agent.response) {
         let clientMessage = agent.queue.shift();
         if (clientMessage) {
+            console.log('agent: ' + agent.id + ' running command:');
+            console.log(clientMessage.data);
             if(agent.timerId){
                 clearTimeout(agent.timerId);
                 agent.timerId = null;
             }
-            //console.log('clientMessage.data.id:',clientMessage.data.id);
             agent.pending[clientMessage.data.id] = clientMessage;
             agent.response.writeHead(200, {'Content-Type': 'application/json'});
             agent.response.end(JSON.stringify(clientMessage.data));
+            if(clientMessage.data.type == 'redirect'){
+                agent.isHere = false;
+            }
             agent.request = agent.response = null;
             return true;
         }
@@ -93,10 +132,13 @@ function flushAgentMessage (agent) {
                                 status: 'wait',
                                 redirect: '/park/'
                             }));
+                agent.isHere = true;
                 agent.request = agent.response = agent.timerId = null;
             }, 60000);
         }
+        return true;
     }
+    console.log('failed')
     return false;
 }
 
@@ -104,7 +146,6 @@ function flushAgentMessage (agent) {
 function commander(req, res){
     try {
         let id = /[?&]id=([^&]+)/.exec(req.url);
-        //console.log(req.url);
         id = id[1];
         let agent = getAgent(id);
         let requestBody = '';
@@ -113,24 +154,19 @@ function commander(req, res){
         });
 
         req.on('end', function () {
-            //console.log('1',requestBody);
             let reply = JSON.parse(requestBody);
 
             //Tell CLI data
             if (reply && reply.id) {
                 let client = agent.pending[reply.id];
                 delete agent.pending[reply.id];
-                //console.log('12',reply);
                 client.clientResponse.writeHead(200, {'Content-Type': 'application/json'});
-                //console.log('123',reply.data);
                 client.clientResponse.end(JSON.stringify(reply.data));
             }
 
             agent.request = req;
             agent.response = res;
-            flushAgentMessage(agent);
-
-
+            flushAgentMessage(agent)
         });
     }catch(e){console.log("Not a url...")}
 }
@@ -142,8 +178,14 @@ function cliHandler(req, res){
         msg += data;
     });
     req.on('end', function() {
-        let cmdObj = JSON.parse(msg);
-        let agent = getAgent(cmdObj.agent);
+        cliForwardMSG(msg, res, req);
+    });
+}
+
+function cliForwardMSG(msg, res, req){
+    let cmdObj = JSON.parse(msg);
+    let agent = getAgent(cmdObj.agent);
+    if(cmdObj.cmd.type != 'list'){
         console.log(black + "\n============================================");
         console.log(blue + "Received command to forward to client/s:", green + cmdObj.agent);
         console.log(blue + 'Queueing message:', green + msg);
@@ -157,27 +199,28 @@ function cliHandler(req, res){
             clientResponse: res,
             clientRequest: req
         });
-        flushAgentMessage(agent);
-    });
-}
-
-
-function xcommander(req, res, timeout){
-    try{
-        let id = /[?&]id=([^&]+)/.exec(req.url);
-        id = id[1];
-        setTimeout(function(){
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({
-                            status: 'wait',
-                            redirect: '/park/'
-                        }));
-            return console.log('reconnect');
-        }, timeout);
-    }catch(e){
-        console.log('Bad client id!');
+        let b = getAgent(cmdObj.agent);
+        if(b.queue){
+            for(c of b.queue){
+                console.log(cmdObj.agent + ':');
+                console.log(c.data);
+            }
+        }
+        //make sure agent is here before sending
+        askToSend(agent);
+        let date = new Date();
+        let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
+        logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');
+    }else{
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        agentsByID = [];
+        for(a in agents){
+            agentsByID.push(agents[a].id);
+        }
+        res.end(JSON.stringify(agentsByID));
     }
 }
+
 
 
 function setup(){
@@ -218,7 +261,6 @@ if (process.argv.length < 4) {
     setup();
     console.log(reset);
 }
-
 
 
 

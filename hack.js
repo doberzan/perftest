@@ -1,6 +1,7 @@
 let timebase;
 let tickCount = 0;
 let FPS = [];
+let num = 0;
 
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
@@ -10,7 +11,6 @@ function runTest(test, resolve, reject){
         }, 50);
         return;
     }
-    console.log('done1');
      let intervalId = setInterval(function(){
         let result = test();
         if(result){
@@ -33,7 +33,6 @@ function scrollDown(){
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y == scroller.getPosition().y){
         console.log(FPS);
-        console.log('done');
         return calculate();
     }
     scroller.scrollBy(null, 7);
@@ -69,7 +68,6 @@ function scrollUp(){
     let scroller = cmp.getScrollable();
     if(0 == scroller.getPosition().y){
         console.log(FPS);
-        console.log('done');
         return {
             fps:FPS
         };
@@ -113,10 +111,17 @@ function start(){
         },
         redirect:function(test){
             location.href = test;
+        },
+        nop:function(){
+            num ++;
+            console.log(num);
+            if(num > 1){
+                location.href = '/park/';
+                num = 0;
+            }
         }
     });
 }
-
 
 window.onload = function(){
     if(Ext.onReady){
