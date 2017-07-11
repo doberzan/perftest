@@ -18,10 +18,7 @@ class Agent {
             if (clientMessage) {
                 console.log('agent: ' + this.id + ' running command:');
                 console.log(clientMessage.data);
-                if(this.timerId){
-                    clearTimeout(this.timerId);
-                    this.timerId = null;
-                }
+                this.clearTimer();
                 this.pending[clientMessage.data.id] = clientMessage;
                 this.response.writeHead(200, {'Content-Type': 'application/json'});
                 this.response.end(JSON.stringify(clientMessage.data));
@@ -30,18 +27,31 @@ class Agent {
             }
             if(!this.timerId){
                 this.timerId = setTimeout(function(){
-                    this.response.writeHead(200, {'Content-Type': 'application/json'});
-                    this.response.end(JSON.stringify({
-                        status: 'wait',
-                        redirect: '/park/'
-                    }));
-                    this.request = this.response = this.timerId = null;
+                    this.timerId = null;
+                    this.sendWait();
                 }, 60000);
             }
             return true;
         }
         console.log('failed')
         return false;
+    }
+    
+    clearTimer(){
+        if(this.timerId){
+            clearTimeout(this.timerId);
+            this.timerId = null;
+        }
+    }
+
+    sendWait(){
+        this.clearTimer();
+        this.response.writeHead(200, {'Content-Type': 'application/json'});
+        this.response.end(JSON.stringify({
+            status: 'wait',
+            redirect: '/park/'
+        }));
+        this.request = this.response = this.timerId = null;
     }
 }
 

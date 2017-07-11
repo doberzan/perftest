@@ -4,7 +4,12 @@ getCommands({
     },
     redirect:function(test){
         console.log(test);
-        location.href = test;
-        return false;
+        return {
+            $value:false,
+            callback:function(){
+                location.href = test;
+            },
+            finish:true
+        };
     }
-}    );
+});

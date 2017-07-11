@@ -112,7 +112,11 @@ function commander(req, res){
             }
             agent.request = req;
             agent.response = res;
-            agent.flush();
+            if(reply.finish){
+                agent.sendWait();
+            }else {
+                agent.flush();
+            }
         });
     }catch(e){console.log("Not a url...")}
 }

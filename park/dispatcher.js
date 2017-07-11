@@ -3,19 +3,32 @@ let agentId = /[?&]id=([^&]+)/.exec(location.search);
 agentId = agentId ? agentId[1] : getOS();
 
 function getCommands(handlers, data){
-    fetch('/~api/park/?id=' + agentId, {
+    return fetch('/~api/park/?id=' + agentId, {
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
         function next(result, j){
-            if(result !== false){
-                getCommands(handlers, {
-                    type:'result',
-                    data:result,
-                    id:j.id
-                });
+            let resultData = result;
+            let callback, finish;
+           
+            if (result && '$value' in result) {
+                resultData = result.$value;
+                callback = result.callback;
+                finish = result.finish;
             }
+
+            getCommands(handlers, {
+                type:'result',
+                data:resultData,
+                id:j.id,
+                finish:finish
+            }).then(function(){
+                if(callback){
+                    callback();
+                }
+            });
         }
+
         response.json().then(function(j){
             if(j.type){
                 console.log(j.type);
