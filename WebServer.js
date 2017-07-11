@@ -69,10 +69,6 @@ function getAgent (id) {
         seq: 0
     });
 }
-var timeout = setTimeout(flushAgentMessage, 10000);
-if(timeout){
-    getAgent(any);
-}
 
 
 function flushAgentMessage (agent) {
