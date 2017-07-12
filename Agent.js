@@ -11,6 +11,16 @@ class Agent {
     static get(id){
         return this.all[id] || (this.all[id] = new Agent(id))
     }
+    
+    sendWait(){
+        this.clearTimer();
+        this.response.writeHead(200, {'Content-Type': 'application/json'});
+        this.response.end(JSON.stringify({
+            status: 'wait',
+            redirect: '/park/'
+        }));
+        this.request = this.response = this.timerId = null;
+    }
 
     flush(){
         if(this.response){
@@ -42,16 +52,6 @@ class Agent {
             clearTimeout(this.timerId);
             this.timerId = null;
         }
-    }
-
-    sendWait(){
-        this.clearTimer();
-        this.response.writeHead(200, {'Content-Type': 'application/json'});
-        this.response.end(JSON.stringify({
-            status: 'wait',
-            redirect: '/park/'
-        }));
-        this.request = this.response = this.timerId = null;
     }
 }
 

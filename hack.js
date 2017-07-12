@@ -110,8 +110,13 @@ function start(){
             });
         },
         redirect:function(test){
-            location.href = test;
-            return 'redirected';
+            return {
+                $value:false,
+                callback:function(){
+                    location.href = test;
+                },
+                finish:true
+            };
         },
         nop:function(){
             num ++;

@@ -51,7 +51,7 @@ function runTest(results, agent, test, server){
     //tell parked agent to go to place to do a test
     let agentUuid = uuidv4();
     console.log('Sending agent \'' + agent + '\' with uuid: \'' +  agentUuid + '\' to run test: ' + '\'' + test + '\'');
-    fetch(server, '/~api/cmd/', {
+    return fetch(server, '/~api/cmd/', {
         agent:agent,
         cmd:{
             type:'redirect',
@@ -77,6 +77,8 @@ function runTest(results, agent, test, server){
                     type:'redirect',
                     data:'/park/?id=' + agent
                 }
+            }).then(function(){
+                console.log('done')
             });
         })
     })
