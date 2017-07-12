@@ -3890,3 +3890,15 @@
 10:38:55 Agent Connected: undefined
 10:38:55 Sent agent 'test1'
 10:38:55 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:23 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:26 Agent Connected: undefined
+10:40:26 Sent agent 'redirect'
+10:40:26 Agent Connected: undefined
+10:40:26 Sent agent 'test1'
+10:40:26 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:26 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:27 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:40 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36
+10:40:40 Agent Connected: undefined
+10:40:40 Sent agent 'redirect'
+10:40:40 Agent Connected: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36

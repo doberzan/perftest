@@ -58,26 +58,27 @@ function runTest(results, agent, test, server){
             data:testPages[test] + '?id=' + agentUuid
         }
         //needs a reply
-    }).then(function(data){console.log(data)});
-    //connect back to hack.js
-    //tell test agent to run test
-    return fetch(server, '/~api/cmd/',{
-        agent:agentUuid,
-        cmd:{
-            type:test,
-            data:test
-        }
-    }
-    ).then(function(data){
-        //tell agent to redirect to park
-        results[agent] = data;
+    }).then(function(data){
+        //connect back to hack.js
+        //tell test agent to run test
         return fetch(server, '/~api/cmd/',{
             agent:agentUuid,
             cmd:{
-                type:'redirect',
-                data:'/park/?id=' + agent
+                type:test,
+                data:test
             }
-        });
+        }
+        ).then(function(data){
+            //tell agent to redirect to park
+            results[agent] = data;
+            return fetch(server, '/~api/cmd/',{
+                agent:agentUuid,
+                cmd:{
+                    type:'redirect',
+                    data:'/park/?id=' + agent
+                }
+            });
+        })
     })
     
 }
