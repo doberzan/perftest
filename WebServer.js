@@ -101,18 +101,18 @@ function commander(req, res){
 
         req.on('end', function () {
             let reply = JSON.parse(requestBody);
-
+            console.log('reply finish:', reply);
             //Tell CLI data
             if (reply && reply.id) {
                 let client = agent.pending[reply.id];
                 delete agent.pending[reply.id];
-                console.log(reply.data);
                 client.clientResponse.writeHead(200, {'Content-Type': 'application/json'});
                 client.clientResponse.end(JSON.stringify(reply.data));
             }
+
             agent.request = req;
             agent.response = res;
-            
+
             if(reply.finish){
                 agent.sendWait();
             }else {
@@ -164,9 +164,8 @@ function cliForwardMSG(msg, res, req){
             console.log('Queue: ' + JSON.stringify(abc()));
         //make sure agent is here before sending
         console.log('flushed by cli')
-        agent.sendWait();
+        //agent.sendWait();
         agent.flush();
-        //agent.flush();
         let date = new Date();
         let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
         logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');

@@ -13,7 +13,7 @@ class Agent {
     }
 
     sendWait(){
-        if(this.response){
+        //if(this.response){
         this.clearTimer();
         this.response.writeHead(200, {'Content-Type': 'application/json'});
         this.response.end(JSON.stringify({
@@ -21,7 +21,7 @@ class Agent {
             redirect: '/park/'
         }));
         this.request = this.response = this.timerId = null;
-        }
+        //}
     }
 
     flush(){

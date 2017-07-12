@@ -70,7 +70,7 @@ function runTest(results, agent, test, server){
         }
         ).then(function(data){
             //tell agent to redirect to park
-            results[agent] = data;
+            results[test] = agent;
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
                 cmd:{
@@ -90,8 +90,10 @@ function runTests(agents, tests, server){
     tests = tests.split(',');
     let all = [];
     let results = {};
-    for(let agent of agents){
-        all.push(runTest(results, agent, tests, server));
+    for(let test of tests){
+        for(let agent of agents){
+            all.push(runTest(results, agent, test, server));
+        }
     }
     return Promise.all(all).then(function(){
         return results;
@@ -114,11 +116,11 @@ class sendCMD extends Command {
                 flags: 'a'
             })
             return runTests(params.agent, params.test, params.server).then(function(results){
-                logfile.write('# ' + params.test + '\n');
-                console.log('# ' + params.test + '\n');
                 //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
                 for(let i in results) {
-                    console.log('## ' + i);
+                    logfile.write('# ' + i + '\n');
+                    for(let agent in i){
+                    console.log('## ' + i.agent);
                     console.log(' - ' + 'MIN: ' + results[i].min);
                     console.log(' - ' + 'AVG: ' + results[i].avg);
                     console.log(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n');
@@ -126,6 +128,7 @@ class sendCMD extends Command {
                     logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
                     logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
                     logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
+                    }
                 }
             });
         }
