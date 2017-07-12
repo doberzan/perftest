@@ -120,7 +120,7 @@ function start(){
         },
         nop:function(){
             num ++;
-            console.log(num);
+            //console.log(num);
             if(num > 1){
                 location.href = '/park/';
                 num = 0;

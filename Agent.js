@@ -5,14 +5,15 @@ class Agent {
         this.queue = [];
         this.pending = {};
         this.seq = 0;
-        console.log('New Agent: ' + id);
+        //console.log('New Agent: ' + id);
     }
 
     static get(id){
-        return this.all[id] || (this.all[id] = new Agent(id))
+        return Agent.all[id] || (Agent.all[id] = new Agent(id))
     }
-    
+
     sendWait(){
+        if(this.response){
         this.clearTimer();
         this.response.writeHead(200, {'Content-Type': 'application/json'});
         this.response.end(JSON.stringify({
@@ -20,14 +21,16 @@ class Agent {
             redirect: '/park/'
         }));
         this.request = this.response = this.timerId = null;
+        }
     }
 
     flush(){
         if(this.response){
             let clientMessage = this.queue.shift();
+            console.log('=============================')
             if (clientMessage) {
-                console.log('agent: ' + this.id + ' running command:');
-                console.log(clientMessage.data);
+                console.log('Shifted: ' + JSON.stringify(clientMessage.data));
+                //
                 this.clearTimer();
                 this.pending[clientMessage.data.id] = clientMessage;
                 this.response.writeHead(200, {'Content-Type': 'application/json'});
@@ -35,15 +38,21 @@ class Agent {
                 this.request = this.response = null;
                 return true;
             }
+            console.log('no message for: ' + this.id);
             if(!this.timerId){
                 this.timerId = setTimeout(function(){
                     this.timerId = null;
-                    this.sendWait();
+                    if(this.sendWait){
+                        this.sendWait();
+                    }else{
+                        console.log('Could not send wait... ');
+                    }
                 }, 60000);
             }
             return true;
         }
-        console.log('failed')
+        
+        console.log('no response handler for ' + this.id)
         return false;
     }
     

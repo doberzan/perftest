@@ -116,6 +116,7 @@ function commander(req, res){
             if(reply.finish){
                 agent.sendWait();
             }else {
+                console.log('flushed by response not finished')
                 agent.flush();
             }
         });
@@ -148,8 +149,24 @@ function cliForwardMSG(msg, res, req){
             clientResponse: res,
             clientRequest: req
         });
+        console.log('Added ' + JSON.stringify({
+                id: ++agent.seq,
+                type: cmdObj.cmd.type,  
+                data: cmdObj.cmd.data
+            }) + ' to queue ' + agent.id);
+            function abc (){
+                var list = [];
+                for(var a in agent.queue){
+                   list.push(a.data);
+                }
+                return list;
+            }
+            console.log('Queue: ' + JSON.stringify(abc()));
         //make sure agent is here before sending
+        console.log('flushed by cli')
+        agent.sendWait();
         agent.flush();
+        //agent.flush();
         let date = new Date();
         let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
         logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');
