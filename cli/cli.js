@@ -160,8 +160,8 @@ class sendCMD extends Command {
                 //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
                 console.log(results);
                 for(let agent in results) {
-                    logfile.write('# ' + agent + '\n');
-                    console.log('# ' + agent);
+                    logfile.write('# ' + agent.toUpperCase() + '\n');
+                    console.log('# ' + agent.toUpperCase());
                     for(let test in results[agent]){
                         var a = results[agent];
                         console.log('## ' + test);
