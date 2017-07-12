@@ -114,7 +114,9 @@ function commander(req, res){
             agent.response = res;
             agent.flush();
         });
-    }catch(e){console.log("Not a url...")}
+    }catch(e){
+        console.log("Not a url...")
+    }
 }
 
 
