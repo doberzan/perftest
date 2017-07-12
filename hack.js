@@ -44,6 +44,7 @@ function calculate(){
     let avg;
     let fps = FPS;
     let sum = 0;
+    FPS = [];
 
     for (let j of fps) {
         if(min > j){
