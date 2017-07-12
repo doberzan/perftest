@@ -112,11 +112,9 @@ function commander(req, res){
             }
             agent.request = req;
             agent.response = res;
+            
             if(reply.finish){
                 agent.sendWait();
-                let client = agent.pending[reply.id];
-                client.clientResponse.writeHead(200, {'Content-Type': 'application/json'});
-                client.clientResponse.end(JSON.stringify({finish:true}));
             }else {
                 agent.flush();
             }

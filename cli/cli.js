@@ -58,7 +58,7 @@ function runTest(results, agent, test, server){
             data:testPages[test] + '?id=' + agentUuid
         }
         //needs a reply
-    })
+    }).then(function(data){console.log(data)});
     //connect back to hack.js
     //tell test agent to run test
     return fetch(server, '/~api/cmd/',{
