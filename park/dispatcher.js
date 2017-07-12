@@ -2,11 +2,14 @@ let timerid = 0;
 let agentId = /[?&]id=([^&]+)/.exec(location.search);
 agentId = agentId ? agentId[1] : getOS();
 
-function getCommands(handlers, data){
+function getCommands(handlers, data, finished){
     return fetch('/~api/park/?id=' + agentId, {
         method: 'post',
         body: JSON.stringify(data || {})
     }).then(function(response){
+        if(finished){
+            return;
+        }
         function next(result, j){
             let resultData = result;
             let callback, finish;
@@ -22,7 +25,7 @@ function getCommands(handlers, data){
                 data:resultData,
                 id:j.id,
                 finish:finish
-            }).then(function(){
+            }, finish).then(function(){
                 if(callback){
                     callback();
                 }

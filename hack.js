@@ -68,9 +68,7 @@ function scrollUp(){
     let scroller = cmp.getScrollable();
     if(0 == scroller.getPosition().y){
         console.log(FPS);
-        return {
-            fps:FPS
-        };
+        return calculate();
     }
     scroller.scrollBy(null, -7);
 }
@@ -99,12 +97,12 @@ function start(){
         echo:function(data){
             console.log(data);
         },
-        test1:function(){
+        scrollDown:function(){
             return new Promise(function(resolve, reject){
                 runTest(scrollDown,resolve, reject);
             });
         },
-        test2:function(){
+        scrollUp:function(){
             return new Promise(function(resolve, reject){
                 runTest(scrollUp,resolve, reject);
             });

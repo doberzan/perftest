@@ -1359,3 +1359,229 @@
  - AVG: undefined
  - FPS: undefined
 
+# test1
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# test1
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## test1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# mac
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# mac
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## ipad
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# mac
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## mac
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# mac
+## 0
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## 1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## 2
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+## 0
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## 1
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## 2
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## 3
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+# mac
+## scrollDown
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## scrollUp
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+## scrollDown
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+## scrollUp
+ - MIN: undefined
+ - AVG: undefined
+ - FPS: undefined
+
+# ipad
+# ipad
+# mac
+## scrollDown
+ - MIN: 59
+ - AVG: 59.916666666666664
+ - FPS: [59,60,60,60,60,60,60,60,60,60,60,60]
+
+## scrollUp
+ - MIN: 59
+ - AVG: 59.96
+ - FPS: [59,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60]
+
+# ipad
+## scrollDown
+ - MIN: 43
+ - AVG: 49.541666666666664
+ - FPS: [43,49,50,49,50,49,48,51,50,51,50,52,50,50,49,51,50,49,50,48,50,50,50,50]
+
+## scrollUp
+ - MIN: 41
+ - AVG: 49.770833333333336
+ - FPS: [43,49,50,49,50,49,48,51,50,51,50,52,50,50,49,51,50,49,50,48,50,50,50,50,41,50,52,49,47,48,48,53,52,52,51,54,50,49,51,52,50,49,50,49,51,51,51,50]
+

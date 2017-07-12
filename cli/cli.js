@@ -7,7 +7,7 @@ function fetch(server, path, data){
         let post_data = JSON.stringify(data);
         let post_options = {
             host: server,
-            port: '80',
+            port: '8080',
             path: path,
             method: 'POST',
             headers: {  
@@ -43,7 +43,44 @@ function fetch(server, path, data){
 
 let testPages = {
     test1: '/test1/',
-    test2: '/test2/'
+    scrollDown: '/test1/'
+}
+
+function runTestSequence(agent, tests, server, testPage){
+    let results = {};
+    let agentUuid = uuidv4();
+    let promise = fetch(server, '/~api/cmd/', {
+        agent:agent,
+        cmd:{
+            type:'redirect',
+            data:testPages[testPage] + '?id=' + agentUuid
+        }
+    })
+    for(let test of tests){
+        promise = promise.then(function(data){
+            return fetch(server, '/~api/cmd/',{
+                agent:agentUuid,
+                cmd:{
+                    type:test,
+                    data:test
+                }
+            }).then(function(data){
+                results[test] = data;
+            });
+        });
+    }
+    return promise.then(function(){
+        return fetch(server, '/~api/cmd/',{
+            agent:agentUuid,
+            cmd:{
+                type:'redirect',
+                data:'/park/?id=' + agent
+            }
+        }).then(function(){
+            return results;
+        });
+    })
+
 }
 
 function runTest(results, agent, test, server){
@@ -57,7 +94,6 @@ function runTest(results, agent, test, server){
             type:'redirect',
             data:testPages[test] + '?id=' + agentUuid
         }
-        //needs a reply
     }).then(function(data){
         //connect back to hack.js
         //tell test agent to run test
@@ -85,15 +121,20 @@ function runTest(results, agent, test, server){
     
 }
 
-function runTests(agents, tests, server){
+function runTests(agents, tests, server, testPage){
     agents = agents.split(',');
     tests = tests.split(',');
     let all = [];
     let results = {};
-    for(let test of tests){
-        for(let agent of agents){
-            all.push(runTest(results, agent, test, server));
-        }
+    //for(let test of tests){
+       // for(let agent of agents){
+           // all.push(runTest(results, agent, test, server));
+        //}
+    //}
+    for(let agent of agents){
+        all.push(runTestSequence(agent, tests, server, testPage).then(function(agentResults){
+            results[agent] = agentResults;
+        }));
     }
     return Promise.all(all).then(function(){
         return results;
@@ -115,19 +156,22 @@ class sendCMD extends Command {
             let logfile = fs.createWriteStream('RESULTS.md', {
                 flags: 'a'
             })
-            return runTests(params.agent, params.test, params.server).then(function(results){
+            return runTests(params.agent, params.test, params.server, params.testpage).then(function(results){
                 //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
-                for(let i in results) {
-                    logfile.write('# ' + i + '\n');
-                    for(let agent in i){
-                    console.log('## ' + i.agent);
-                    console.log(' - ' + 'MIN: ' + results[i].min);
-                    console.log(' - ' + 'AVG: ' + results[i].avg);
-                    console.log(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n');
-                    logfile.write('## ' + i + '\n');
-                    logfile.write(' - ' + 'MIN: ' + results[i].min + '\n');
-                    logfile.write(' - ' + 'AVG: ' + results[i].avg + '\n');
-                    logfile.write(' - ' + 'FPS: ' + JSON.stringify(results[i].fps) + '\n\n');
+                console.log(results);
+                for(let agent in results) {
+                    logfile.write('# ' + agent + '\n');
+                    console.log('# ' + agent);
+                    for(let test in results[agent]){
+                        var a = results[agent];
+                        console.log('## ' + test);
+                        console.log(' - ' + 'MIN: ' + a[test].min);
+                        console.log(' - ' + 'AVG: ' + a[test].avg);
+                        console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
+                        logfile.write('## ' + test + '\n');
+                        logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
+                        logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');
+                        logfile.write(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n\n');
                     }
                 }
             });
@@ -136,8 +180,8 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agent' , 'test'],
-    parameters: ['server', 'agent', 'test']
+    switches: ['server', 'agent' , 'test', 'testpage'],
+    parameters: ['server', 'agent', 'test', 'testpage']
 });
 
 new sendCMD().run();
