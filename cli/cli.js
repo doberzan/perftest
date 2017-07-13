@@ -7,7 +7,7 @@ function fetch(server, path, data){
         let post_data = JSON.stringify(data);
         let post_options = {
             host: server,
-            port: '8080',
+            port: '80',
             path: path,
             method: 'POST',
             headers: {  
