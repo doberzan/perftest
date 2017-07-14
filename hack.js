@@ -31,7 +31,7 @@ function runTest(test, resolve, reject){
 function scrollDown(){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    if(scroller.getMaxPosition().y == scroller.getPosition().y){
+    if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         console.log(FPS);
         return calculate();
     }
@@ -67,15 +67,12 @@ function calculate(){
 function scrollUp(){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    if(0 == scroller.getPosition().y){
+    if(0 >= scroller.getPosition().y){
         console.log(FPS);
         return calculate();
     }
     scroller.scrollBy(null, -7);
 }
-
-
-
 
 function tick(t){
     if(!timebase){
