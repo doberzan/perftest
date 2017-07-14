@@ -25,9 +25,6 @@ let roots = {
     test1: serveStatic(appPath, {
         'index': ['index.html', 'index.htm']
     }),
-    test2: serveStatic(appPath, {
-        'index': ['index.html', 'index.htm']
-    }),
     'messages': function(req, res){
           
     },
@@ -139,7 +136,32 @@ function cliHandler(req, res){
 function cliForwardMSG(msg, res, req){
     let cmdObj = JSON.parse(msg);
     let agent = Agent.get(cmdObj.agent);
-    if(cmdObj.cmd.type != 'list'){
+    if(cmdObj.cmd.type == 'list'){
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        agentsByID = [];
+        for(a in Agent.all){
+            if(Agent.all[a].id){
+                agentsByID.push(Agent.all[a].id);
+            }
+        }
+        res.end(JSON.stringify(agentsByID));
+    }else if(cmdObj.cmd.type == 'serve'){
+        console.log(cmdObj.cmd.data);
+        fs.access(cmdObj.cmd.data, function(e){
+            if(e){
+                console.error('Directory does not exist!');
+            }else{
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify('Failed no such directory!'));
+            }
+        })
+        roots[cmdObj.cmd.buildUuid] = serveStatic(cmdObj.cmd.data, {
+            'index': ['index.html', 'index.htm']
+        });
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify('Serving directory...'));
+        
+    }else{
         agent.queue.push({
             data: {
                 id: ++agent.seq,
@@ -168,15 +190,6 @@ function cliForwardMSG(msg, res, req){
         let date = new Date();
         let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
         logfile.write(time + ' Sent agent \'' + cmdObj.cmd.type + '\'');
-    }else{
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        agentsByID = [];
-        for(a in Agent.all){
-            if(Agent.all[a].id){
-                agentsByID.push(Agent.all[a].id);
-            }
-        }
-        res.end(JSON.stringify(agentsByID));
     }
 }
 

@@ -13,7 +13,8 @@ function fetch(server, path, data){
             headers: {  
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(post_data)
-            }
+            },
+            timeout: 500 * 100
         };
         let post_req = client.request(post_options, function(res) {
             res.setEncoding('utf8');
@@ -45,94 +46,75 @@ let testPages = {
     scrollDown: '/test1/'
 }
 
-function runTestSequence(agent, tests, server, testPage){
+
+function serveBuild(server, buildPath, buildUuid){
+    return fetch(server, '/~api/cmd/',{
+        cmd:{
+            type:'serve',
+            data:buildPath,
+            buildUuid:buildUuid
+        }
+    });
+}
+
+function runTestSequence(agent, tests, server, build, buildUuid){
     let results = {};
     let agentUuid = uuidv4();
     let promise = fetch(server, '/~api/cmd/', {
         agent:agent,
         cmd:{
             type:'redirect',
-            data:testPages[testPage] + '?id=' + agentUuid
+            data:'/' + buildUuid + '/' + '?id=' + agentUuid
         }
     })
-    for(let test of tests){
-        promise = promise.then(function(data){
+        for(let test of tests){
+            promise = promise.then(function(data){
+                return fetch(server, '/~api/cmd/',{
+                    agent:agentUuid,
+                    cmd:{
+                        type:test,
+                        data:test
+                    }
+                }).then(function(data){
+                    results[test] = data;
+                });
+            });
+        }
+        return promise.then(function(){
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
                 cmd:{
-                    type:test,
-                    data:test
+                    type:'redirect',
+                    data:'/park/?id=' + agent
                 }
-            }).then(function(data){
-                results[test] = data;
+            }).then(function(){
+                return results;
             });
-        });
-    }
-    return promise.then(function(){
-        return fetch(server, '/~api/cmd/',{
-            agent:agentUuid,
-            cmd:{
-                type:'redirect',
-                data:'/park/?id=' + agent
-            }
-        }).then(function(){
-            return results;
-        });
-    })
+        })
 
 }
-
-function checkForTestPages(tests, server){
-    let page;
-    for(let test in tests){
-        fetch(server, '/~api/cmd/',{
-            cmd:{
-                type:'getPages',
-                tests:testPages
-            }
-        }).then(function(r){
-            console.log(r);
-            try {
-                let response = JSON.parse(r);
-                for(var t in response){
-                    if(response[t].exsists) {
-
-                    }else{
-                        console.log('Test page', t ,' does not exist so not running...');
-                    }
-                }
-            }catch(e){
-                console.log(e);
-            }
-        });
-    }
-
-}
-
-
-function runTests(agents, tests, server, testPage){
+function runTests(agents, tests, server, build){
     agents = agents.split(',');
     tests = tests.split(',');
     let all = [];
     let results = {};
-    //for(let test of tests){
-       // for(let agent of agents){
-           // all.push(runTest(results, agent, test, server));
-        //}
-    //}
-    for(let agent of agents){
-        all.push(runTestSequence(agent, tests, server, testPage).then(function(agentResults){
-            results[agent] = agentResults;
-        }));
-    }
-    return Promise.all(all).then(function(){
-        return results;
+    let buildUuid = uuidv4();
+    testPages[buildUuid] = build;
+    return serveBuild(server, testPages[buildUuid], buildUuid).then(function(c){
+        for(let agent of agents){
+            all.push(runTestSequence(agent, tests, server, build, buildUuid).then(function(agentResults){
+                results[agent] = agentResults;
+            }));
+        }
+        return Promise.all(all).then(function(){
+            return results;
+        });
     });
 }
 
 class sendCMD extends Command {
     execute (params) {
-        if(params.test == 'listagents'){
+        if(params.tests == 'listagents'){
             fetch(params.server, '/~api/cmd/',{
                 cmd:{
                     type:'list',
@@ -145,13 +127,23 @@ class sendCMD extends Command {
             let logfile = fs.createWriteStream('RESULTS.md', {
                 flags: 'a'
             })
-            return runTests(params.agent, params.test, params.server, params.testpage).then(function(results){
-                //logfile.write('## \t' + h + ':' + minutes + ':' + sec + ' ' + m + '/' +  d + '/' + y + '\n');
+            fs.access(params.build, function(e){
+                if(e){
+                    console.error('Build does not exist');
+                    return false;
+                }
+            });
+            return runTests(params.agents, params.tests, params.server, params.build).then(function(results){
                 for(let agent in results) {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
+                    //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
+                        if(a[test].comment){
+                            console.log(' - ' + 'COMMENTS: ' + a[test].comment);
+                            logfile.write(' - ' + 'COMMENTS: ' + a[test].comment);
+                        }
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
@@ -168,8 +160,8 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agent' , 'test', 'build'],
-    parameters: ['server', 'agent', 'test', 'build']
+    switches: ['server', 'agents' , 'tests', 'build'],
+    parameters: ['server', 'agents', 'tests', 'build']
 });
 
 new sendCMD().run();

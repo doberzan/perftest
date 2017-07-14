@@ -18,6 +18,14 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/WebServer.js",
             "args": ["192.168.1.220", "8080"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cli",
+            "cwd": "${workspaceRoot}/cli",
+            "program": "${workspaceRoot}/cli/cli.js",
+            "args": ["-server", "192.168.1.220", "-agents", "mac,ipad", "-test", "scrollDown,scrollUp", "-build", "/Users/declan/Sencha/QuickStart/"]
         }
     ]
 }

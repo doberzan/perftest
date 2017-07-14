@@ -2,7 +2,9 @@ let timebase;
 let tickCount = 0;
 let FPS = [];
 let num = 0;
-
+let timerIds = {}
+let lastId = 0;
+let pageLoadTime = 0;
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
@@ -11,8 +13,9 @@ function runTest(test, resolve, reject){
         }, 50);
         return;
     }
+    var id = eventStopWatch('start');
      let intervalId = setInterval(function(){
-        let result = test();
+        let result = test(id);
         if(result){
             clearInterval(intervalId);
             cancelAnimationFrame(animId);
@@ -28,18 +31,20 @@ function runTest(test, resolve, reject){
 
 //clear
 
-function scrollDown(){
+function scrollDown(id){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         console.log(FPS);
-        return calculate();
+        var sec = eventStopWatch('stop', id);
+        console.log(sec);
+        return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, 7);
+    scroller.scrollBy(null, 100);
 }
 
 //Calculates data
-function calculate(){
+function calculate(comments){
     let min = 9999999;
     let avg;
     let fps = FPS;
@@ -54,24 +59,50 @@ function calculate(){
     }
     avg = sum / fps.length;
 
-
-
     return {
         min:min,
         avg:avg,
-        fps:fps
+        fps:fps,
+        comment:comments
+
     };
 }
 
 
-function scrollUp(){
+function eventStopWatch(cmd, id){
+    if(cmd == 'start'){
+        eventTimerId = lastId ++;
+        timerIds[eventTimerId] = {};
+        timerIds[eventTimerId].num = performance.now();
+        return eventTimerId;
+    }else if(cmd == 'stop'){
+        var n = timerIds[id].num;
+        delete timerIds[id];
+        console.log(performance.now() - n);
+        return performance.now() - n;
+    }
+}
+
+function scrollUp(id){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
         console.log(FPS);
-        return calculate();
+        var sec = eventStopWatch('stop', id);
+        console.log(sec);
+        return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, -7);
+    scroller.scrollBy(null, -100);
+}
+
+function loadTest(id){
+    if(Ext.isReady){
+        pageLoadTime = eventStopWatch('stop', id);
+    }else{
+        setTimeout(function(){
+            loadTest(id)
+        }, 1);
+    }
 }
 
 function tick(t){
@@ -88,7 +119,6 @@ function tick(t){
         }
     }
 }
-
 
 function start(){
     getCommands({
@@ -116,7 +146,7 @@ function start(){
         },
         nop:function(){
             num ++;
-            //console.log(num);
+            console.log('nop num: ' + num);
             if(num > 1){
                 location.href = '/park/';
                 num = 0;
@@ -126,6 +156,7 @@ function start(){
 }
 
 window.onload = function(){
+    loadTest(eventStopWatch('start'));
     if(Ext.onReady){
         Ext.onReady(start);
     }else{
