@@ -38,7 +38,7 @@ class Agent {
             }
             console.log('no message for: ' + this.id);
             if(!this.timerId){
-                this.timerId = setTimeout(function(){
+                this.timerId = setTimeout(() => {
                     this.timerId = null;
                     if(this.sendWait){
                         this.sendWait();
