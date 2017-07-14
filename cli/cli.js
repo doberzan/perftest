@@ -7,7 +7,7 @@ function fetch(server, path, data){
         let post_data = JSON.stringify(data);
         let post_options = {
             host: server,
-            port: '80',
+            port: '8080',
             path: path,
             method: 'POST',
             headers: {  
@@ -82,6 +82,34 @@ function runTestSequence(agent, tests, server, testPage){
 
 }
 
+function checkForTestPages(tests, server){
+    let page;
+    for(let test in tests){
+        fetch(server, '/~api/cmd/',{
+            cmd:{
+                type:'getPages',
+                tests:testPages
+            }
+        }).then(function(r){
+            console.log(r);
+            try {
+                let response = JSON.parse(r);
+                for(var t in response){
+                    if(response[t].exsists) {
+
+                    }else{
+                        console.log('Test page', t ,' does not exist so not running...');
+                    }
+                }
+            }catch(e){
+                console.log(e);
+            }
+        });
+    }
+
+}
+
+
 function runTests(agents, tests, server, testPage){
     agents = agents.split(',');
     tests = tests.split(',');
@@ -104,13 +132,14 @@ function runTests(agents, tests, server, testPage){
 
 class sendCMD extends Command {
     execute (params) {
-        if(params.test == 'list'){
+        if(params.test == 'listagents'){
             fetch(params.server, '/~api/cmd/',{
                 cmd:{
-                    type:params.test,
+                    type:'list',
                     data:params.test
                 }
-            }).then(function(data){ 
+            }).then(function(data){
+                console.log(data);
             });
         }else{
             let logfile = fs.createWriteStream('RESULTS.md', {
@@ -139,8 +168,8 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agent' , 'test', 'testpage'],
-    parameters: ['server', 'agent', 'test', 'testpage']
+    switches: ['server', 'agent' , 'test', 'build'],
+    parameters: ['server', 'agent', 'test', 'build']
 });
 
 new sendCMD().run();

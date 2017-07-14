@@ -74,9 +74,6 @@ function scrollUp(){
     scroller.scrollBy(null, -7);
 }
 
-
-
-
 function tick(t){
     if(!timebase){
         timebase = t;
