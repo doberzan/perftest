@@ -8,7 +8,6 @@ const Agent = require('./Agent.js');
 
 const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>';
 let port = 8080;
-let hostname = '127.0.0.1';
 let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
 let plus = (black + "[" + green + "+" + black +"]");
 let appPath = "/Users/declan/Sencha/QuickStart/";
@@ -217,19 +216,18 @@ function setup(){
         }
     });
     
-    server.listen(port, hostname, function(){
+    server.listen(port, function(){
         return console.log(plus + blue + ' Started test server on' + green, hostname,
             blue+ 'at port' + green, port + reset);
         });
   }
 
 
-if (process.argv.length < 4) {
-    console.log(red + '[!] Not enough arguments! Syntax: node WebServer.js <hostname> <port>');
+if (process.argv.length < 3) {
+    console.log(red + '[!] Not enough arguments! Syntax: node WebServer.js <port>');
     console.log(reset);
 } else {
-    hostname = process.argv[2];
-    port = process.argv[3];
+    port = process.argv[2];
     setup();
     console.log(reset);
 }
