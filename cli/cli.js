@@ -140,7 +140,7 @@ class sendCMD extends Command {
                         var a = results[agent];
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
-                            logfile.write(' - ' + 'COMMENTS: ' + a[test].comment);
+                            logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
                         }
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
