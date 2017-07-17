@@ -125,7 +125,7 @@ class sendCMD extends Command {
             });
         }else{
             let logfile = fs.createWriteStream('RESULTS.md', {
-                flags: 'a'
+                flags: 'w'
             })
             fs.access(params.build, function(e){
                 if(e){
