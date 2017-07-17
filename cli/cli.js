@@ -124,7 +124,7 @@ class sendCMD extends Command {
                 console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('RESULTS.md')
+            let logfile = fs.createWriteStream('/Users/declan/Sencha/perftest/cli/RESULTS.md')
             fs.access(params.build, function(e){
                 if(e){
                     console.error('Build does not exist');
