@@ -12,7 +12,7 @@ let hostname = '127.0.0.1';
 let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
 let plus = (black + "[" + green + "+" + black +"]");
 let appPath = "/Users/declan/Sencha/QuickStart/";
-let logfile = fs.createWriteStream('ServerLog.log', {
+let logfile = fs.createWriteStream('/Users/declan/Sencha/perftest/ServerLog.log', {
     flags: 'a'
 })
 let roots = {
@@ -33,8 +33,8 @@ let roots = {
             let date = new Date();
             let time = ('\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
           
-            if(getFilesizeInBytes('ServerLog.log') > 1049 * 1000 * 10000){ //10MB
-                var readStream = fs.createReadStream('ServerLog.log', 'utf8');
+            if(getFilesizeInBytes('/Users/declan/Sencha/perftest/ServerLog.log') > 1049 * 1000 * 10000){ //10MB
+                var readStream = fs.createReadStream('/Users/declan/Sencha/perftest/ServerLog.log', 'utf8');
                 var data;
                 readStream.on('data', function(chunk) {  
                     data += chunk;
@@ -65,7 +65,7 @@ let roots = {
 function cutLog(data){
     var text = data;
     var logtext = text.split('\n');
-    var writeStream = fs.createWriteStream('ServerLog.log', {
+    var writeStream = fs.createWriteStream('/Users/declan/Sencha/perftest/ServerLog.log', {
         flags: 'w'
     })
     var num = 2000;
