@@ -124,9 +124,7 @@ class sendCMD extends Command {
                 console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('RESULTS.md', {
-                flags: 'w'
-            })
+            let logfile = fs.createWriteStream('RESULTS.md')
             fs.access(params.build, function(e){
                 if(e){
                     console.error('Build does not exist');
@@ -152,6 +150,7 @@ class sendCMD extends Command {
                         logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
                         logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');
                         logfile.write(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n\n');
+                        logfile.end();
                     }
                 }
             });
