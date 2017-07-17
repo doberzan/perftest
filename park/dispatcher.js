@@ -59,7 +59,7 @@ function getCommands(handlers, data, finished){
         setTimeout(function(){
             getCommands(handlers);
         }, 30 * 1000);
-    });
+         });
 }
 
 function getOS() {
