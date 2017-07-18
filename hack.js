@@ -51,6 +51,11 @@ function calculate(comments){
     let sum = 0;
     FPS = [];
 
+
+
+
+
+
     for (let j of fps) {
         if(min > j){
             min = j;
