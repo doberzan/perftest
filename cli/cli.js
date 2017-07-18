@@ -37,7 +37,6 @@ function fetch(server, path, data){
 
         post_req.write(post_data);
     });
-
 }
 
 
