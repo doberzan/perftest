@@ -73,7 +73,7 @@ function runTestSequence(agent, tests, server, build, buildUuid){
                     agent:agentUuid,
                     cmd:{
                         type:test,
-                        data:test
+                        data:test  
                     }
                 }).then(function(data){
                     results[test] = data;
