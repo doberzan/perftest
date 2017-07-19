@@ -25,7 +25,7 @@
             "name": "cli",
             "cwd": "${workspaceRoot}/cli",
             "program": "${workspaceRoot}/cli/cli.js",
-            "args": ["-server", "192.168.1.220", "-agents", "mac,ipad", "-test", "scrollDown,scrollUp", "-build", "/Users/declan/Sencha/QuickStart/"]
+            "args": ["-server", "192.168.1.220", "-agents", "mac", "-test", "scrollDown,scrollUp", "-framework", "/Users/declan/Sencha/builds/ext-6.5.1.309/", "-app", "/Users/declan/Sencha/builds/" 
         }
     ]
 }
