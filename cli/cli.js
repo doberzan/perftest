@@ -2,6 +2,9 @@ const Command = require('switchit').Command;
 const client = require('http');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
+const util = require('util');
+const { exec } = require('child_process');
+
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
         let post_data = JSON.stringify(data);
@@ -32,7 +35,7 @@ function fetch(server, path, data){
                     console.log(e);
                     console.log('Failed to parse:', responseBody);
                 }
-            });
+            }); 
         });
 
         post_req.write(post_data);
@@ -55,6 +58,15 @@ function serveBuild(server, buildPath, buildUuid){
         }
     });
 }
+
+//build framework
+exec(`cd ${path} & sencha app install --framework=${frameworkpath} & sencha app build`, (err, stdout, stderr) => {
+  if (err) {
+    // node couldn't execute the command
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+});
 
 function runTestSequence(agent, tests, server, build, buildUuid){
     let results = {};
