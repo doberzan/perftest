@@ -38,6 +38,7 @@ function fetch(server, path, data){
                     }
                 });
             }).on('error', function(e) {
+                reject('lost connection to agent');
                 console.log("Got error: " + e.message);
             });;
 
