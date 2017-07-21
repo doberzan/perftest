@@ -4,33 +4,6 @@ const uuidv4 = require('uuid/v4');
 const fs = require('fs');
 var exec = require('child_process').exec;
 
-function buildApp(apppath, frameworkpath){
-    return execCommand(`cd ${apppath} && sencha app install --framework=${frameworkpath}`).then(function(){
-        return execCommand(`cd ${apppath} && sencha app build`);
-    });
-}
-
-function execCommand(cmd){
-    return new Promise(function(resolve, reject){
-        var child = exec(cmd);
-        child.stdout.setEncoding('utf8');
-        var data = [];
-        child.stdout.on('data', (chunk) => {
-            chunk = chunk.replace('\n', '');
-            data.push(chunk);
-            console.log(chunk);
-        });
-        child.stdout.on('error', function(err){
-            console.log(err);
-            reject(err);
-        });
-        child.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            //console.log(data);
-        });
-        resolve(data);
-    });
-};
 
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
@@ -86,7 +59,7 @@ function serveBuild(server, buildPath, buildUuid){
     });
 }
 
-function runTestSequence(agent, tests, server, framework, buildUuid){
+function runTestSequence(agent, tests, server, app, buildUuid){
     let results = {};
     let agentUuid = uuidv4();
     let promise = fetch(server, '/~api/cmd/', {
@@ -122,17 +95,16 @@ function runTestSequence(agent, tests, server, framework, buildUuid){
         })
 
 }
-function runTests(agents, tests, server, framework, app){
+function runTests(agents, tests, server, app){
     agents = agents.split(',');
     tests = tests.split(',');
     let all = [];
     let results = {};
     let buildUuid = uuidv4();
-    testPages[buildUuid] = framework;
-    buildApp(app, framework);
+    testPages[buildUuid] = app;
     return serveBuild(server, testPages[buildUuid], buildUuid).then(function(c){
         for(let agent of agents){
-            all.push(runTestSequence(agent, tests, server, framework, buildUuid).then(function(agentResults){
+            all.push(runTestSequence(agent, tests, server, app, buildUuid).then(function(agentResults){
                 results[agent] = agentResults;
             }));
         }
@@ -154,14 +126,14 @@ class sendCMD extends Command {
                 console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('/Users/declan/Sencha/perftest/cli/RESULTS.md')
-            fs.access(params.framework, function(e){
+            let logfile = fs.createWriteStream('RESULTS.md')
+            fs.access(params.app, function(e){
                 if(e){
-                    console.error('Framework does not exist');
+                    console.error('WebApp does not exist');
                     return false;
                 }
             });
-            return runTests(params.agents, params.tests, params.server, params.framework).then(function(results){
+            return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
@@ -189,8 +161,8 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agents' , 'tests', 'framework', 'app'],
-    parameters: ['server', 'agents', 'tests', 'framework', 'app']
+    switches: ['server', 'agents' , 'tests' , 'app'],
+    parameters: ['server', 'agents', 'tests', 'app']
 });
 
 new sendCMD().run();
