@@ -37,7 +37,9 @@ function fetch(server, path, data){
                         console.log('Failed to parse:', responseBody);
                     }
                 });
-            });
+            }).on('error', function(e) {
+                console.log("Got error: " + e.message);
+            });;
 
             post_req.write(post_data);
         }catch(e){
