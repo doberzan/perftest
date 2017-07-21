@@ -140,6 +140,7 @@ class sendCMD extends Command {
                     return false;
                 }
             });
+            
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
