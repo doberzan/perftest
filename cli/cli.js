@@ -38,14 +38,14 @@ function fetch(server, path, data){
                     }
                 });
             }).on('error', function(e) {
-                reject('lost connection to agent');
+                resolve(undefined);
                 console.log("Got error: " + e.message);
             });;
 
             post_req.write(post_data);
         }catch(e){
             console.log(e);
-            reject(e);
+            resolve(undefined);
         }
     });
 }
