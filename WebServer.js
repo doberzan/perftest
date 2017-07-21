@@ -141,6 +141,7 @@ function cliForwardMSG(msg, res, req){
     }else if(cmdObj.cmd.type == 'serve'){
         console.log(cmdObj.cmd.data);
         fs.access(cmdObj.cmd.data, function(e){
+            console.log(cmdObj.cmd.data);
             if(e){
                 console.error('Directory does not exist!');
             }else{
