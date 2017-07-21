@@ -76,32 +76,37 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             data:'/' + buildUuid + '/' + '?id=' + agentUuid
         }
     })
-        for(let test of tests){
-            promise = promise.then(function(data){
+        try{
+            for(let test of tests){
+                promise = promise.then(function(data){
+                    return fetch(server, '/~api/cmd/',{
+                        agent:agentUuid,
+                        cmd:{
+                            type:test,
+                            data:test  
+                        }
+                    }).then(function(data){
+                        results[test] = data;
+                    });
+                });
+            }
+            return promise.then(function(){
                 return fetch(server, '/~api/cmd/',{
                     agent:agentUuid,
                     cmd:{
-                        type:test,
-                        data:test  
+                        type:'redirect',
+                        data:'/park/?id=' + agent
                     }
-                }).then(function(data){
-                    results[test] = data;
+                }).then(function(){
+                    return results;
                 });
-            });
+            })
+        }catch(e){
+            console.log(e);
         }
-        return promise.then(function(){
-            return fetch(server, '/~api/cmd/',{
-                agent:agentUuid,
-                cmd:{
-                    type:'redirect',
-                    data:'/park/?id=' + agent
-                }
-            }).then(function(){
-                return results;
-            });
-        })
 
 }
+
 function runTests(agents, tests, server, app){
     agents = agents.split(',');
     tests = tests.split(',');
@@ -140,7 +145,7 @@ class sendCMD extends Command {
                     return false;
                 }
             });
-            
+
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
