@@ -7,38 +7,43 @@ var exec = require('child_process').exec;
 
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
-        let post_data = JSON.stringify(data);
-        let post_options = {
-            host: server,
-            port: '8080',
-            path: path,
-            method: 'POST',
-            headers: {  
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(post_data)
-            },
-            timeout: 500 * 100
-        };
-        let post_req = client.request(post_options, function(res) {
-            res.setEncoding('utf8');
-            let responseBody = '';
-            res.on('data', function (chunk) {
-                responseBody += chunk;
+        try{
+            let post_data = JSON.stringify(data);
+            let post_options = {
+                host: server,
+                port: '8080',
+                path: path,
+                method: 'POST',
+                headers: {  
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(post_data)
+                },
+                timeout: 500 * 100
+            };
+            let post_req = client.request(post_options, function(res) {
+                res.setEncoding('utf8');
+                let responseBody = '';
+                res.on('data', function (chunk) {
+                    responseBody += chunk;
+                });
+                
+                res.on('end', function () {
+                    try{
+                        let j = JSON.parse(responseBody);
+                        resolve(j);
+                    }catch(e){
+                        resolve(undefined);
+                        console.log(e);
+                        console.log('Failed to parse:', responseBody);
+                    }
+                });
             });
-            
-            res.on('end', function () {
-                try{
-                    let j = JSON.parse(responseBody);
-                    resolve(j);
-                }catch(e){
-                    resolve(undefined);
-                    console.log(e);
-                    console.log('Failed to parse:', responseBody);
-                }
-            });
-        });
 
-        post_req.write(post_data);
+            post_req.write(post_data);
+        }catch(e){
+            console.log(e);
+            reject(e);
+        }
     });
 }
 
@@ -159,7 +164,7 @@ class sendCMD extends Command {
                         logfile.write(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n\n');
                     }
                 }
-                
+
                 logfile.end();
             });
         }
