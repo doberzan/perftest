@@ -50,10 +50,12 @@ let testPages = {
 
 
 function serveBuild(server, buildPath, buildUuid){
+    var path = __dirname + buildPath;
+    console.log(path);
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:buildPath,
+            data:path,
             buildUuid:buildUuid
         }
     });
