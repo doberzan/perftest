@@ -146,7 +146,8 @@ class sendCMD extends Command {
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
                             logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
                         }
-                        console.log(`##teamcity[test name= \'${test}\']`);
+                        var fps = a[test].avg;
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.fps>' value='${fps}']`);
 
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
