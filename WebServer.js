@@ -164,6 +164,7 @@ function cliForwardMSG(msg, res, req){
             clientResponse: res,
             clientRequest: req
         });
+        console.log(roots);
         console.log('Added ' + JSON.stringify({
                 id: ++agent.seq,
                 type: cmdObj.cmd.type,  
