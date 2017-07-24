@@ -101,6 +101,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 return "error"
             });
         }
+
         return promise.then(function(){
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
@@ -165,7 +166,7 @@ class sendCMD extends Command {
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
-                        var fps = a[test].fps;
+                        var fps = a[test].avg;
                         var load = a[test].load;
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
