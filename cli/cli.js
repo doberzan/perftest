@@ -109,6 +109,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
         })
     }catch(e){
         console.log("Lost connection to agent " + agent + "!");
+        return false;
     }
 }
 
