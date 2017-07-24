@@ -183,7 +183,6 @@ class sendCMD extends Command {
                         logfile.write(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n\n');
                     }
                 }
-
                 logfile.end();
             });
         }
