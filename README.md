@@ -16,11 +16,11 @@ This will start an agent server on the designated port 8080.
 
 ## CLI Setup
 
-Once you have your agent server running make sure to `cd` to the cli directory within the perftest package.
+Once you have your agent-server running make sure to `cd` to the cli directory within the perftest package.
+Then install required modules with `npm install`.
+To run tests on agents use the syntax as follows:
 
-The syntax of the cli is as follows:
-
-    node cli.js -server <Agent Server Address> -agents <agent-id,agent-id,agent-id> -test <test1,test2,test3> -app <Web-Application-path>
+    node cli.js -server <agent-server-address> -agents <agent-id,agent-id,agent-id> -test <test1,test2,test3> -app <Web-Application-path>
 
 **Note:** The 'test' argument ids need to exist in the hack.js file within the Web-App.
 
@@ -123,6 +123,24 @@ To create a test to be run by the agents use the following as examples:
 ```
         
 **Note:** runTest will call your function and pass it a stopwatch `id` which can be stopped using `var time = eventStopWatch('stop', id-passed-to-your-function);`
+
+## Cli - Server - Agents, Communications Breakdown
+
+Example communication map:
+
+CLI tells server to serve /app-path/ to agents under a uuid mask.
+`CLI -serve {path:'/app-path/', uuid:page-uuid-mask}-> Server`
+Server responds with OK
+`CLI <-200 OK- Server`
+CLI sends a redirect-to-test-page command to each agent.
+`CLI -redirect:'/uuid-path/?id=agent-uuid-mask'-> Server -redirect:'/uuid-path/?id=agent-uuid-mask'-> Agent`
+Agent will **not** respond to the redirect cmd, but will wait on the testpage for a test command.
+`CLI -cmd:'scrollDown'-> Server -test:'scrollDown'-> Agent`
+Agent runs test and responds with results.
+`CLI <-results:{fps:[],min:fpsmin,max:fpsmax,exc..}- Server <-results:{fps:[],min:fpsmin,max:fpsmax,exc..}- Agent`
+CLI can now either send a redirect back to park page or send another test to run.
+`CLI -redirect:'/park/'-> Server -redirect:'/park/'-> Agent`
+Agent redirects and waits in parking lot for next test.
 
 
 
