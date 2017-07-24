@@ -24,6 +24,30 @@ The syntax of the cli is as follows:
 
 **Note:** The 'test' argument ids need to exist in the hack.js file within the Web-App.
 
+## Web-App Setup
+After building a web-app make sure to copy the hack.js, dispatcher.js, and controller.js files into the web-app's home directory.
+Then refrence them in the index.html,index.htm, ect.. file.
+```html
+<!DOCTYPE HTML>
+<html manifest="">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
+
+    <title>Quick Start</title>
+
+    <!-- The line below must be kept intact for Sencha Cmd to build your application -->
+    <script id="microloader" data-app="9b26bc93-57e1-4173-910f-d75951525cfc" type="text/javascript" src="bootstrap.js"></script>
+    <script type="text/javascript" src="/park/dispatcher.js"></script>  //refrence dispatcher.js
+    <script type="text/javascript" src="hack.js"></script>              //refrence hack.js
+</head>
+<body></body>
+</html>
+```
+
+
+
 ## Hack.js 
 
 Finally, in order for tests to be run in browser the hack.js file is served up with the Web-App.
