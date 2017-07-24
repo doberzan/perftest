@@ -164,7 +164,7 @@ class sendCMD extends Command {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
-                    for(let test in results[agent]){
+                    for(let test of results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
                         var load = a[test].load;
