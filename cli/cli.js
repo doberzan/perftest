@@ -32,20 +32,20 @@ function fetch(server, path, data){
                         let j = JSON.parse(responseBody);
                         resolve(j);
                     }catch(e){
-                        resolve('failed');
+                        reject('failed');
                         console.log(e);
                         console.log('Failed to parse:', responseBody);
                     }
                 });
             }).on('error', function(e) {
-                resolve('failed');
+                reject('failed');
                 console.log("Got error: " + e.message);
             });;
 
             post_req.write(post_data);
         }catch(e){
             console.log(e);
-            resolve('failed');
+            reject('failed');
         }
     });
 }
@@ -78,7 +78,11 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             type:'redirect',
             data:'/' + buildUuid + '/' + '?id=' + agentUuid
         }
-    })
+    }).then(function(data){
+        console.log(data)
+    }, function(err){
+        throw "Lost Connection";
+    });
     try{
         for(let test of tests){
             promise = promise.then(function(data){
@@ -89,11 +93,12 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                         data:test  
                     }
                 }).then(function(data){
-                    if(data == 'failed'){
-                        throw "Lost Connection";
-                    }
                     results[test] = data;
+                }, function(err){
+                        throw "Lost Connection";
                 });
+            }, function(err){
+                throw "Lost Connection";
             });
         }
         return promise.then(function(){
@@ -105,6 +110,8 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }
             }).then(function(){
                 return results;
+            }, function(err){
+                throw "Lost Connection";
             });
         })
     }catch(e){
