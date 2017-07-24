@@ -154,8 +154,7 @@ class sendCMD extends Command {
             let logfile = fs.createWriteStream('RESULTS.md')
             fs.access(params.app, function(e){
                 if(e){
-                    console.error('WebApp does not exist');
-                    return false;
+                    console.error('Warning! WebApp does not exist');
                 }
             });
 
@@ -166,14 +165,14 @@ class sendCMD extends Command {
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
+                        var fps = a[test].fps;
+                        var load = a[test].load;
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
                             logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
                         }
-                        var fps = a[test].avg;
-                        var load = a[test].load;
-                        console.log(`##teamcity[buildStatisticValue key='<${agent}.fps>' value='${fps}']`);
-                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
