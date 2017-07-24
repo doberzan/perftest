@@ -102,6 +102,6 @@ To create a test to be run by the agents use the following as examples:
 
 
 
-###![alt text][logo]
+### ![alt text][logo]
 
-###[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
+### [logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
