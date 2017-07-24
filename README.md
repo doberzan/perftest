@@ -1,3 +1,7 @@
+![alt text][logo]
+
+[logo]: http://raed.it/blog/wp-content/uploads/sencha.png "Sencha"
+
 # PerfTest
 
 ## Server Setup
