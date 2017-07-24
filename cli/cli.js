@@ -82,7 +82,13 @@ function runTestSequence(agent, tests, server, app, buildUuid){
         }).then(function(data){
             console.log(data)
         }, function(err){
-            return "error"
+            return {
+                min:0,
+                avg:0,
+                fps:[0],
+                load:0,
+                comment:'Lost connection to agent'
+            };
         });
         for(let test of tests){
             promise = promise.then(function(data){
@@ -95,10 +101,22 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
-                        return "error"
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
                 });
             }, function(err){
-                return "error"
+                return {
+                    min:0,
+                    avg:0,
+                    fps:[0],
+                    load:0,
+                    comment:'Lost connection to agent'
+                };
             });
         }
 
@@ -112,7 +130,13 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             }).then(function(){
                 return results;
             }, function(err){
-                return "error"
+                return {
+                    min:0,
+                    avg:0,
+                    fps:[0],
+                    load:0,
+                    comment:'Lost connection to agent'
+                };
             });
         })
     }catch(e){
@@ -164,7 +188,7 @@ class sendCMD extends Command {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
-                    for(let test of results[agent]){
+                    for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
                         var load = a[test].load;
