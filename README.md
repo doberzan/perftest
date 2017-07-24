@@ -76,25 +76,23 @@ To create a test to be run by the agents use the following as examples:
             }
         });
         
-        function your-test-function(){
-
+        function your-test-function(id){
+            //DOM minipulation, user emulation code, ect...
+            var time = eventStopWatch('stop', id);
+            comments = `Test took ${time} miliseconds to complete`
+            
+            //This function calculates the current running test's fps, loadtime, and any test comments, then the data is returned back to your function.
+            
+            return calculate(comments);
+            
+           OR
+           
+           //return custom results
+           
+           return {
+               comments:comments,
+               time:time 
+           }
         }
         
 **Note:** runTest will call your function and pass it a stopwatch `id` which can be stopped using `var time = eventStopWatch('stop', id-passed-to-your-function);`
-    
-    
-    
-    
-    
-
-You can now visit your application at its local address on your web server.
-
-Alternatively, you can run this command so that Sencha Cmd will provide a web
-server for you:
-
-    sencha app watch
-
-You can now visit the resulting address displayed in your console.  It will
-usually be found here:
-
-    http://localhost:1841/
