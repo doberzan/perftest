@@ -90,7 +90,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                     }
                 }).then(function(data){
                     if(data == 'failed'){
-                        return 'Lost connection to agent '+ agent + '!'; 
+                        throw "Lost Connection";
                     }
                     results[test] = data;
                 });
@@ -108,7 +108,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             });
         })
     }catch(e){
-        console.log(e);
+        console.log("Lost connection to agent " + agent + "!");
     }
 }
 
