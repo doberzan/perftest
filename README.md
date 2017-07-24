@@ -28,7 +28,7 @@ The syntax of the cli is as follows:
 
 Finally, in order for tests to be run in browser the hack.js file is served up with the Web-App.
 To create a test to be run by the agents use the following as examples:
-    Example 1:
+### Example 1:
         getCommands({                   //Getcommands is passed the tests to-be-run as an object to be called in dispatcher.js
 
             echo:function(data){        //for debugging cli -> webserver -> agent communications
@@ -65,21 +65,22 @@ To create a test to be run by the agents use the following as examples:
             }
         });
         
-        Example 2: 
-            getCommands({
-                [....], //It is important to return a promise which will later receive your tests results.
-                <your-test-id>:function(){ 
-                    return new Promise(function(resolve, reject){
-                        //Use the runTest function to measure your tests performance
-                        runTest(<your-test-function>,resolve, reject); 
-                    });
-                }
-            });
-            **Note:** runTest will call your function and pass it a stopwatch `id` which can be stopped using `var time = eventStopWatch('stop', id-passed-to-your-function);`
-            function your-test-function(){
-                
+### Example 2: 
+        getCommands({
+            [....], //It is important to return a promise which will later receive your tests results.
+            <your-test-id>:function(){ 
+                return new Promise(function(resolve, reject){
+                    //Use the runTest function to measure your tests performance
+                    runTest(<your-test-function>,resolve, reject); 
+                });
             }
-    
+        });
+        
+        function your-test-function(){
+
+        }
+        
+**Note:** runTest will call your function and pass it a stopwatch `id` which can be stopped using `var time = eventStopWatch('stop', id-passed-to-your-function);`
     
     
     
