@@ -129,17 +129,29 @@ To create a test to be run by the agents use the following as examples:
 Example communication map:
 
 CLI tells server to serve /app-path/ to agents under a uuid mask.
+
 `CLI -serve {path:'/app-path/', uuid:page-uuid-mask}-> Server`
+
 Server responds with OK
+
 `CLI <-200 OK- Server`
+
 CLI sends a redirect-to-test-page command to each agent.
+
 `CLI -redirect:'/uuid-path/?id=agent-uuid-mask'-> Server -redirect:'/uuid-path/?id=agent-uuid-mask'-> Agent`
+
 Agent will **not** respond to the redirect cmd, but will wait on the testpage for a test command.
+
 `CLI -cmd:'scrollDown'-> Server -test:'scrollDown'-> Agent`
+
 Agent runs test and responds with results.
+
 `CLI <-results:{fps:[],min:fpsmin,max:fpsmax,exc..}- Server <-results:{fps:[],min:fpsmin,max:fpsmax,exc..}- Agent`
+
 CLI can now either send a redirect back to park page or send another test to run.
+
 `CLI -redirect:'/park/'-> Server -redirect:'/park/'-> Agent`
+
 Agent redirects and waits in parking lot for next test.
 
 
