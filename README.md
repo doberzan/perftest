@@ -1,7 +1,3 @@
-![alt text][logo]
-
-[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
-
 # PerfTest
 
 ## Server Setup
@@ -103,3 +99,9 @@ To create a test to be run by the agents use the following as examples:
 ```
         
 **Note:** runTest will call your function and pass it a stopwatch `id` which can be stopped using `var time = eventStopWatch('stop', id-passed-to-your-function);`
+
+
+
+![alt text][logo]
+
+[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
