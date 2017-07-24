@@ -32,20 +32,20 @@ function fetch(server, path, data){
                         let j = JSON.parse(responseBody);
                         resolve(j);
                     }catch(e){
-                        resolve(undefined);
+                        resolve('failed');
                         console.log(e);
                         console.log('Failed to parse:', responseBody);
                     }
                 });
             }).on('error', function(e) {
-                resolve(undefined);
+                resolve('failed');
                 console.log("Got error: " + e.message);
             });;
 
             post_req.write(post_data);
         }catch(e){
             console.log(e);
-            resolve(undefined);
+            resolve('failed');
         }
     });
 }
@@ -79,35 +79,37 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             data:'/' + buildUuid + '/' + '?id=' + agentUuid
         }
     })
-        try{
-            for(let test of tests){
-                promise = promise.then(function(data){
-                    return fetch(server, '/~api/cmd/',{
-                        agent:agentUuid,
-                        cmd:{
-                            type:test,
-                            data:test  
-                        }
-                    }).then(function(data){
-                        results[test] = data;
-                    });
-                });
-            }
-            return promise.then(function(){
+    try{
+        for(let test of tests){
+            promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
                     agent:agentUuid,
                     cmd:{
-                        type:'redirect',
-                        data:'/park/?id=' + agent
+                        type:test,
+                        data:test  
                     }
-                }).then(function(){
-                    return results;
+                }).then(function(data){
+                    if(data == 'failed'){
+                        return 'Lost connection to agent '+ agent + '!'; 
+                    }
+                    results[test] = data;
                 });
-            })
-        }catch(e){
-            console.log(e);
+            });
         }
-
+        return promise.then(function(){
+            return fetch(server, '/~api/cmd/',{
+                agent:agentUuid,
+                cmd:{
+                    type:'redirect',
+                    data:'/park/?id=' + agent
+                }
+            }).then(function(){
+                return results;
+            });
+        })
+    }catch(e){
+        console.log(e);
+    }
 }
 
 function runTests(agents, tests, server, app){
