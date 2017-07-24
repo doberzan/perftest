@@ -82,7 +82,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
         }).then(function(data){
             console.log(data)
         }, function(err){
-            throw "Lost Connection";
+            return "error"
         });
         for(let test of tests){
             promise = promise.then(function(data){
@@ -95,10 +95,10 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
-                        throw "Lost Connection";
+                        return "error"
                 });
             }, function(err){
-                throw "Lost Connection";
+                return "error"
             });
         }
         return promise.then(function(){
@@ -111,7 +111,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             }).then(function(){
                 return results;
             }, function(err){
-                throw "Lost Connection";
+                return "error"
             });
         })
     }catch(e){
