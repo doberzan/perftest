@@ -28,7 +28,7 @@ The syntax of the cli is as follows:
 
 Finally, in order for tests to be run in browser the hack.js file is served up with the Web-App.
 To create a test to be run by the agents use the following as examples:
-### Example 1:
+#### Example 1:
 ```javascript
         getCommands({                   //Getcommands is passed the tests to-be-run as an object to be called in dispatcher.js
 
@@ -66,7 +66,7 @@ To create a test to be run by the agents use the following as examples:
             }
         });
 ```
-### Example 2: 
+#### Example 2: 
 ```javascript
         getCommands({
             [....], //It is important to return a promise which will later receive your tests results.
@@ -102,6 +102,6 @@ To create a test to be run by the agents use the following as examples:
 
 
 
-![alt text][logo]
+###![alt text][logo]
 
-[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
+###[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
