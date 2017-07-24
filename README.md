@@ -1,34 +1,28 @@
-# QuickStart PerfTest
+# PerfTest
 
-Let's walk through the steps of creating the app we've been working on above in
-a real world environment.
-
-## Download the Ext JS Framework
-
-If you have not already done so, download and unpack the Ext JS framework from
-either the Products section of the main Sencha website
-([www.sencha.com](http://www.sencha.com)) or from the downloads section of the
-Sencha Support portal.
-
-## Download the Sample Application
+## Server Setup
 
 You can download from Github by clicking the green "Clone or Download" button. Then
 just click "Download Zip" and save the file to your machine.
 
-Once downloaded, move the folder to wherever you'd like your application to live.
+Once downloaded, move the folder to wherever you'd like your agents to live.
+Then install required modules with `npm install`.
 
-## Add Sencha Cmd to your App
+To launch the server execute the following command:
 
-Once you have your application where you want it, "cd" into its directory in your
-Command Line Interface (CLI). Then, issue the following command:
+    `node WebServer.js 8080`
+    
+This will start an agent server on the designated port 8080.
 
-    sencha app install --framework=/path/to/extjs/
+## CLI Setup
 
-This command will update your folder with Sencha Cmd's application scaffold that
-allows your application to benefit from Sencha Cmd's many features.
+Once you have your agent server running make sure to `cd` to the cli directory within the perftest package.
 
-**Note:** "/path/to/extjs/" should be replaced with the path to wherever you
-unzipped the Ext JS framework on your machine.
+The syntax of the cli is as follows:
+
+    node cli.js -server <Agent Server Address> -agents <agent-id,agent-id,agent-id> -test <test1,test2,test3> -app <Web-Application-path>
+
+**Note:** The 'test' arguments need to be added to hack.js file in the WebApplication.
 
 ## Build Your Application
 
