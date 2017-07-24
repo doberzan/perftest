@@ -63,7 +63,7 @@ function serveBuild(server, buildPath, buildUuid){
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:buildPath,//path,
+            data:path,
             buildUuid:buildUuid
         }
     });
