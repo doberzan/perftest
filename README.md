@@ -1,6 +1,6 @@
 ![alt text][logo]
 
-[logo]: https://pbs.twimg.com/profile_images/593198454760869888/A2Hz7iCP.jpg "Sencha"
+[logo]: http://www.gmkfreelogos.com/logos/S/img/Sencha.gif "Sencha"
 
 # PerfTest
 
