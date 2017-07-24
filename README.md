@@ -1,6 +1,6 @@
 ![alt text][logo]
 
-[logo]: http://raed.it/blog/wp-content/uploads/sencha.png "Sencha"
+[logo]: https://pbs.twimg.com/profile_images/593198454760869888/A2Hz7iCP.jpg "Sencha"
 
 # PerfTest
 
