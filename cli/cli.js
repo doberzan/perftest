@@ -63,7 +63,7 @@ function serveBuild(server, buildPath, buildUuid){
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:path,
+            data:buildPath,//path,
             buildUuid:buildUuid
         }
     });
@@ -72,18 +72,18 @@ function serveBuild(server, buildPath, buildUuid){
 function runTestSequence(agent, tests, server, app, buildUuid){
     let results = {};
     let agentUuid = uuidv4();
-    let promise = fetch(server, '/~api/cmd/', {
-        agent:agent,
-        cmd:{
-            type:'redirect',
-            data:'/' + buildUuid + '/' + '?id=' + agentUuid
-        }
-    }).then(function(data){
-        console.log(data)
-    }, function(err){
-        throw "Lost Connection";
-    });
     try{
+        let promise = fetch(server, '/~api/cmd/', {
+            agent:agent,
+            cmd:{
+                type:'redirect',
+                data:'/' + buildUuid + '/' + '?id=' + agentUuid
+            }
+        }).then(function(data){
+            console.log(data)
+        }, function(err){
+            throw "Lost Connection";
+        });
         for(let test of tests){
             promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
@@ -171,8 +171,9 @@ class sendCMD extends Command {
                             logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
                         }
                         var fps = a[test].avg;
+                        var load = a[test].load;
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.fps>' value='${fps}']`);
-
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
