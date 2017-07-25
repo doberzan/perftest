@@ -8,6 +8,7 @@ const { exec } = require('child_process');
 =======
 var exec = require('child_process').exec;
 
+<<<<<<< HEAD
 function buildApp(apppath, frameworkpath){
     return execCommand(`cd ${apppath} && sencha app install --framework=${frameworkpath}`).then(function(){
         return execCommand(`cd ${apppath} && sencha app build`);
@@ -69,8 +70,51 @@ function fetch(server, path, data){
                 }
             }); 
         });
+=======
 
-        post_req.write(post_data);
+function fetch(server, path, data){
+    return new Promise(function(resolve, reject){
+        try{
+            let post_data = JSON.stringify(data);
+            let post_options = {
+                host: server,
+                port: '8080',
+                path: path,
+                method: 'POST',
+                headers: {  
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(post_data)
+                },
+                timeout: 500 * 100
+            };
+            let post_req = client.request(post_options, function(res) {
+                res.setEncoding('utf8');
+                let responseBody = '';
+                res.on('data', function (chunk) {
+                    responseBody += chunk;
+                });
+                
+                res.on('end', function () {
+                    try{
+                        let j = JSON.parse(responseBody);
+                        resolve(j);
+                    }catch(e){
+                        reject('failed');
+                        console.log(e);
+                        console.log('Failed to parse:', responseBody);
+                    }
+                });
+            }).on('error', function(e) {
+                reject('failed');
+                console.log("Got error: " + e.message);
+            });;
+>>>>>>> 5812b7d3b417bbd9e995680de8419852d0acbd67
+
+            post_req.write(post_data);
+        }catch(e){
+            console.log(e);
+            reject('failed');
+        }
     });
 }
 
@@ -82,15 +126,18 @@ let testPages = {
 
 
 function serveBuild(server, buildPath, buildUuid){
+    var path = __dirname +'/'+ buildPath;
+    console.log(path);
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:buildPath,
+            data:path,
             buildUuid:buildUuid
         }
     });
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 //build framework
 exec(`cd ${path} & sencha app install --framework=${frameworkpath} & sencha app build`, (err, stdout, stderr) => {
@@ -105,15 +152,29 @@ function runTestSequence(agent, tests, server, build, buildUuid){
 =======
 function runTestSequence(agent, tests, server, framework, buildUuid){
 >>>>>>> e21368cdf899d7875e06faf0b995e2e25381e3e9
+=======
+function runTestSequence(agent, tests, server, app, buildUuid){
+>>>>>>> 5812b7d3b417bbd9e995680de8419852d0acbd67
     let results = {};
     let agentUuid = uuidv4();
-    let promise = fetch(server, '/~api/cmd/', {
-        agent:agent,
-        cmd:{
-            type:'redirect',
-            data:'/' + buildUuid + '/' + '?id=' + agentUuid
-        }
-    })
+    try{
+        let promise = fetch(server, '/~api/cmd/', {
+            agent:agent,
+            cmd:{
+                type:'redirect',
+                data:'/' + buildUuid + '/' + '?id=' + agentUuid
+            }
+        }).then(function(data){
+            console.log(data)
+        }, function(err){
+            return {
+                min:0,
+                avg:0,
+                fps:[0],
+                load:0,
+                comment:'Lost connection to agent'
+            };
+        });
         for(let test of tests){
             promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
@@ -124,9 +185,26 @@ function runTestSequence(agent, tests, server, framework, buildUuid){
                     }
                 }).then(function(data){
                     results[test] = data;
+                }, function(err){
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
                 });
+            }, function(err){
+                return {
+                    min:0,
+                    avg:0,
+                    fps:[0],
+                    load:0,
+                    comment:'Lost connection to agent'
+                };
             });
         }
+
         return promise.then(function(){
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
@@ -136,21 +214,32 @@ function runTestSequence(agent, tests, server, framework, buildUuid){
                 }
             }).then(function(){
                 return results;
+            }, function(err){
+                return {
+                    min:0,
+                    avg:0,
+                    fps:[0],
+                    load:0,
+                    comment:'Lost connection to agent'
+                };
             });
         })
-
+    }catch(e){
+        console.log("Lost connection to agent " + agent + "!");
+        return false;
+    }
 }
-function runTests(agents, tests, server, framework, app){
+
+function runTests(agents, tests, server, app){
     agents = agents.split(',');
     tests = tests.split(',');
     let all = [];
     let results = {};
     let buildUuid = uuidv4();
-    testPages[buildUuid] = framework;
-    buildApp(app, framework);
+    testPages[buildUuid] = app;
     return serveBuild(server, testPages[buildUuid], buildUuid).then(function(c){
         for(let agent of agents){
-            all.push(runTestSequence(agent, tests, server, framework, buildUuid).then(function(agentResults){
+            all.push(runTestSequence(agent, tests, server, app, buildUuid).then(function(agentResults){
                 results[agent] = agentResults;
             }));
         }
@@ -172,20 +261,24 @@ class sendCMD extends Command {
                 console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('/Users/declan/Sencha/perftest/cli/RESULTS.md')
-            fs.access(params.framework, function(e){
+            let logfile = fs.createWriteStream('RESULTS.md')
+            fs.access(params.app, function(e){
                 if(e){
-                    console.error('Framework does not exist');
-                    return false;
+                    console.error('Warning! WebApp does not exist');
                 }
             });
-            return runTests(params.agents, params.tests, params.server, params.framework).then(function(results){
+
+            return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
+                        var fps = a[test].avg;
+                        var load = a[test].load;
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
+                        console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
                             logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
@@ -194,6 +287,7 @@ class sendCMD extends Command {
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
                         console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
+                        console.log(agent + " load time:" + load);
                         logfile.write('## ' + test + '\n');
                         logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
                         logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');
@@ -207,8 +301,8 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agents' , 'tests', 'framework', 'app'],
-    parameters: ['server', 'agents', 'tests', 'framework', 'app']
+    switches: ['server', 'agents' , 'tests' , 'app'],
+    parameters: ['server', 'agents', 'tests', 'app']
 });
 
 new sendCMD().run();

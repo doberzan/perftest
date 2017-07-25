@@ -1,0 +1,23 @@
+{
+  "name": "perftest",
+  "version": "1.0.0",
+  "description": "Let's walk through the steps of creating the app we've been working on above in a real world environment.",
+  "main": "index.js",
+  "dependencies": {
+    "chromedriver": "^2.29.0",
+    "connect": "^3.6.2",
+    "finalhandler": "^1.0.3",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "selenium-webdriver": "^3.4.0",
+    "serve-static": "^1.12.3",
+    "servestatic": "0.0.0",
+    "webdriverio": "^4.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sencha",
+  "license": "ISC"
+}
