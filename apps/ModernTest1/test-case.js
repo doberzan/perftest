@@ -150,6 +150,11 @@ function start(){
                 runTest(scrollUp,resolve, reject);
             });
         },
+        teleportScrolling:function(){
+            return new Promise(function(resolve, reject){
+                runTest(teleportScrolling,resolve, reject);
+            });
+        },
         redirect:function(test){
             return {
                 $value:false,
