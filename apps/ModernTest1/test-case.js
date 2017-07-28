@@ -92,10 +92,7 @@ function eventStopWatch(cmd, timerid){
         console.log(performance.now() - n);
         return performance.now() - n;
     }else if(cmd == 'getTime'){
-        console.log("timerids:",timerIds);
-        console.log('id: ' + timerid);
         var n = timerIds[timerid].num;
-        console.log(performance.now() - n);
         return performance.now() - n;
     }
 }
