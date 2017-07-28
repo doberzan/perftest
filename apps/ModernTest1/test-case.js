@@ -39,7 +39,7 @@ function teleportScrolling(){
        // return calculate(`Time: ${id}`);
     //}
     var rand = Math.floor(Math.random() * 10000);
-    scroller.setVerticalScrollPosition(rand);
+    scroller.scrollTo(0,rand);
 }
 
 function scrollDown(id){
