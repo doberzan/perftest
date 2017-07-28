@@ -35,7 +35,7 @@ Then refrence them in the index.html,index.htm, ect.. file.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 
-    <title>Quick Start</title>
+    <title>Test App</title>
 
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
     <script id="microloader" data-app="9b26bc93-57e1-4173-910f-d75951525cfc" type="text/javascript" src="bootstrap.js"></script>
