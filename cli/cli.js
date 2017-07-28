@@ -58,12 +58,12 @@ let testPages = {
 
 
 function serveBuild(server, buildPath, buildUuid){
-    var path = __dirname +'/'+ buildPath;
+    
     console.log(path);
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:path,
+            data:buildPath,
             buildUuid:buildUuid
         }
     });
@@ -90,6 +90,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 comment:'Lost connection to agent'
             };
         });
+        
         for(let test of tests){
             promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
