@@ -32,12 +32,12 @@ function runTest(test, resolve, reject){
 function teleportScrolling(){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    //if(eventStopWatch('getTime', id) > 5000){
-      //  console.log(FPS);
-       // var sec = eventStopWatch('stop', id);
-       // console.log(sec);
-       // return calculate(`Time: ${id}`);
-    //}
+    if(eventStopWatch('getTime', id) > 5000){
+        console.log(FPS);
+        var sec = eventStopWatch('stop', id);
+        console.log(sec);
+        return calculate(`Time: ${id}`);
+    }
     var rand = Math.floor(Math.random() * 10000);
     scroller.scrollTo(0,rand);
 }
@@ -92,6 +92,7 @@ function eventStopWatch(cmd, id){
         console.log(performance.now() - n);
         return performance.now() - n;
     }else if(cmd == 'getTime'){
+        console.log(timerIds[id]);
         var n = timerIds[id].num;
         console.log(performance.now() - n);
         return performance.now() - n;
