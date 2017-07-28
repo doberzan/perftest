@@ -190,7 +190,7 @@ class sendCMD extends Command {
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
-                        var load = a[test].load;
+                        var load = a[test].pageLoadTime;
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
