@@ -78,7 +78,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 data:'/' + buildUuid + '/' + '?id=' + agentUuid
             }
         }).then(function(data){
-            console.log(data)
+           // console.log(data)
         }, function(err){
             return {
                 min:0,
@@ -172,7 +172,7 @@ class sendCMD extends Command {
                     data:params.test
                 }
             }).then(function(data){
-                console.log(data);
+               // console.log(data);
             });
         }else{
             let logfile = fs.createWriteStream('RESULTS.md')
