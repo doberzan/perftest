@@ -35,7 +35,7 @@ Then refrence them in the index.html,index.htm, ect.. file.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 
-    <title>Quick Start</title>
+    <title>Test App</title>
 
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
     <script id="microloader" data-app="9b26bc93-57e1-4173-910f-d75951525cfc" type="text/javascript" src="bootstrap.js"></script>
@@ -105,7 +105,7 @@ To create a test to be run by the agents use the following as examples:
         function your-test-function(id){
             //DOM minipulation, user emulation code, ect...
             var time = eventStopWatch('stop', id);
-            comments = `Test took ${time} miliseconds to complete`
+            var comments = `Test took ${time} miliseconds to complete`
             
             //This function calculates the current running test's fps, loadtime, and any test comments, then the data is returned back to your function.
             
