@@ -1,15 +1,10 @@
 Ext.define('ModernTest1.store.Employees', {
     extend: 'Ext.data.Store',
     alias: 'store.employees',
-
-    /*proxy: {
-        type: 'ajax',
-        url: 'data/data.json'
-    },*/
     data: (function(){
         var data = [];
-        for(var j = 0; j < 2; j ++ ){
-            for(var i = 0; i < 20; i ++){
+        for(var j = 0; j < 1000; j ++ ){
+            for(var i = 0; i < 2; i ++){
                 data.push({
                     firstName: 'John' + i,
                     lastName: "Quill" + i,
