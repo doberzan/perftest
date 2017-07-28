@@ -14,7 +14,7 @@ function runTest(test, resolve, reject){
         return;
     }
     var id = eventStopWatch('start');
-     let intervalId = setInterval(function(){
+    let intervalId = setInterval(function(){
         let result = test(id);
         if(result){
             clearInterval(intervalId);
@@ -32,12 +32,12 @@ function runTest(test, resolve, reject){
 function teleportScrolling(){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    if(eventStopWatch('getTime', id) > 5000){
-        console.log(FPS);
-        var sec = eventStopWatch('stop', id);
-        console.log(sec);
-        return calculate(`Time: ${id}`);
-    }
+    //if(eventStopWatch('getTime', id) > 5000){
+      //  console.log(FPS);
+       // var sec = eventStopWatch('stop', id);
+       // console.log(sec);
+       // return calculate(`Time: ${id}`);
+    //}
     var rand = Math.floor(Math.random() * 10000);
     scroller.setVerticalScrollPosition(rand);
 }
