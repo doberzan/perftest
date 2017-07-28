@@ -87,7 +87,7 @@
          * root namespace, change this to "". Doing so would change the mapping of
          * "QuickStart.view.Foo" to "sass/src/QuickStart/view/Foo.scss".
          */
-        "namespace": "QuickStart",
+        "namespace": "ModernTest1",
 
         /**
          * Comma-separated list of files or folders containing extra Sass. These
