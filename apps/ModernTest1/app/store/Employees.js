@@ -4,7 +4,7 @@ Ext.define('ModernTest1.store.Employees', {
     data: (function(){
         var data = [];
         for(var j = 0; j < 1000; j ++ ){
-            for(var i = 0; i < 2; i ++){
+            for(var i = 0; i < 100; i ++){
                 data.push({
                     firstName: 'John' + i,
                     lastName: "Quill" + i,
