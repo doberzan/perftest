@@ -63,12 +63,11 @@ function calculate(comments){
         min:min,
         avg:avg,
         fps:fps,
-        pageLoadTime:pageLoadTime,
+        pageLoadTime:pageLoadTime || 0,
         comment:comments
 
     };
 }
-
 
 function eventStopWatch(cmd, id){
     if(cmd == 'start'){

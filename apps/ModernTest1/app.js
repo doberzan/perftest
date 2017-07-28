@@ -1,15 +1,15 @@
 Ext.application({
-    name: 'QuickStart',
+    name: 'ModernTest1',
 
-    extend: 'QuickStart.Application',
+    extend: 'ModernTest1.Application',
 
     requires: [
-        'QuickStart.*'
+        'ModernTest1.*'
     ],
 
     // The name of the initial view to create. With the classic toolkit this class
     // will gain a "viewport" plugin if it does not extend Ext.Viewport. With the
     // modern toolkit, the main view will be added to the Viewport.
     //
-    mainView: 'QuickStart.view.main.Main'
+    mainView: 'ModernTest1.view.main.Main'
 });
