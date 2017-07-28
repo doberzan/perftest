@@ -29,7 +29,18 @@ function runTest(test, resolve, reject){
 
 }
 
-//clear
+function teleportScrolling(){
+    let cmp = Ext.getCmp('thegrid');
+    let scroller = cmp.getScrollable();
+    if(eventStopWatch('getTime', id) > 5000){
+        console.log(FPS);
+        var sec = eventStopWatch('stop', id);
+        console.log(sec);
+        return calculate(`Time: ${id}`);
+    }
+    var rand = Math.floor(Math.random() * 10000);
+    scroller.setVerticalScrollPosition(rand);
+}
 
 function scrollDown(id){
     let cmp = Ext.getCmp('thegrid');
@@ -78,6 +89,10 @@ function eventStopWatch(cmd, id){
     }else if(cmd == 'stop'){
         var n = timerIds[id].num;
         delete timerIds[id];
+        console.log(performance.now() - n);
+        return performance.now() - n;
+    }else if(cmd == 'getTime'){
+        var n = timerIds[id].num;
         console.log(performance.now() - n);
         return performance.now() - n;
     }
