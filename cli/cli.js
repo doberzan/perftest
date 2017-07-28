@@ -80,15 +80,24 @@ function runTestSequence(agent, tests, server, app, buildUuid){
         }).then(function(data){
            // console.log(data)
         }, function(err){
-            return {
-                min:0,
-                avg:0,
-                fps:[0],
-                load:0,
-                comment:'Lost connection to agent'
-            };
+            results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
+                    return 'failed';
         });
-
+        if(promise == 'failed'){
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    }; 
+        }
         for(let test of tests){
             promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
@@ -100,6 +109,13 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
+                    results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
                     return {
                         min:0,
                         avg:0,
@@ -109,13 +125,20 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                     };
                 });
             }, function(err){
-                return {
-                    min:0,
-                    avg:0,
-                    fps:[0],
-                    load:0,
-                    comment:'Lost connection to agent'
-                };
+                results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
             });
         }
 
@@ -129,13 +152,20 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             }).then(function(){
                 return results;
             }, function(err){
-                return {
-                    min:0,
-                    avg:0,
-                    fps:[0],
-                    load:0,
-                    comment:'Lost connection to agent'
-                };
+                results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
             });
         })
     }catch(e){
