@@ -80,21 +80,21 @@ function calculate(comments){
     };
 }
 
-function eventStopWatch(cmd, id){
+function eventStopWatch(cmd, timerid){
     if(cmd == 'start'){
         eventTimerId = lastId ++;
         timerIds[eventTimerId] = {};
         timerIds[eventTimerId].num = performance.now();
         return eventTimerId;
     }else if(cmd == 'stop'){
-        var n = timerIds[id].num;
-        delete timerIds[id];
+        var n = timerIds[timerid].num;
+        delete timerIds[timerid];
         console.log(performance.now() - n);
         return performance.now() - n;
     }else if(cmd == 'getTime'){
         console.log("timerids:",timerIds);
-        console.log('id: ' + id);
-        var n = timerIds[id].num;
+        console.log('id: ' + timerid);
+        var n = timerIds[timerid].num;
         console.log(performance.now() - n);
         return performance.now() - n;
     }
