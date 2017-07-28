@@ -1,4 +1,4 @@
-Ext.define('QuickStart.view.main.ListViewController', {
+Ext.define('ModernTest1.view.main.ListViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.listview',
 
