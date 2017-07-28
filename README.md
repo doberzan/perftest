@@ -105,7 +105,7 @@ To create a test to be run by the agents use the following as examples:
         function your-test-function(id){
             //DOM minipulation, user emulation code, ect...
             var time = eventStopWatch('stop', id);
-            comments = `Test took ${time} miliseconds to complete`
+            var comments = `Test took ${time} miliseconds to complete`
             
             //This function calculates the current running test's fps, loadtime, and any test comments, then the data is returned back to your function.
             
