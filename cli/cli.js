@@ -81,14 +81,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
            // console.log(data)
         }, function(err){
             console.log('nope');
-            results[test] = {
-                        min:0,
-                        avg:0,
-                        fps:[0],
-                        load:0,
-                        comment:'Lost connection to agent'
-                    };
-                    return 'failed';
+            return 'failed';
         });
         if(promise == 'failed'){
                 return results;
@@ -122,8 +115,6 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                     };
                 });
             }, function(err){
-                console.log('nope3');
-                throw err;
                 results[test] = {
                         min:0,
                         avg:0,
@@ -131,7 +122,8 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                         load:0,
                         comment:'Lost connection to agent'
                     };
-                    return results;
+                console.log('nope3');
+                throw err;
             });
         }
 
@@ -146,13 +138,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 return results;
             }, function(err){
                 console.log('nope4');
-                results[test] = {
-                        min:0,
-                        avg:0,
-                        fps:[0],
-                        load:0,
-                        comment:'Lost connection to agent'
-                    };
+                throw err;
                     return {
                         min:0,
                         avg:0,
