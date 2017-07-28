@@ -91,7 +91,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                     return 'failed';
         });
         if(promise == 'failed'){
-                    return results;
+                return results;
         }
         for(let test of tests){
             promise = promise.then(function(data){
@@ -104,6 +104,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
+                    throw err;
                     console.log('nope2');
                     results[test] = {
                         min:0,
@@ -122,6 +123,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 });
             }, function(err){
                 console.log('nope3');
+                throw err;
                 results[test] = {
                         min:0,
                         avg:0,
@@ -129,13 +131,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                         load:0,
                         comment:'Lost connection to agent'
                     };
-                    return {
-                        min:0,
-                        avg:0,
-                        fps:[0],
-                        load:0,
-                        comment:'Lost connection to agent'
-                    };
+                    return results;
             });
         }
 
@@ -169,7 +165,8 @@ function runTestSequence(agent, tests, server, app, buildUuid){
     }catch(e){
         console.log('nope5');
         console.log("Lost connection to agent " + agent + "!");
-        return false;
+        promise = results;
+        return promise;
     }
 }
 
