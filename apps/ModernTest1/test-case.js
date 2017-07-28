@@ -13,9 +13,9 @@ function runTest(test, resolve, reject){
         }, 50);
         return;
     }
-    var id = eventStopWatch('start');
+    var timerid = eventStopWatch('start');
     let intervalId = setInterval(function(){
-        let result = test(id);
+        let result = test(timerid);
         if(result){
             clearInterval(intervalId);
             cancelAnimationFrame(animId);
@@ -29,25 +29,25 @@ function runTest(test, resolve, reject){
 
 }
 
-function teleportScrolling(){
+function teleportScrolling(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    if(eventStopWatch('getTime', id) > 5000){
+    if(eventStopWatch('getTime', timerid) > 5000){
         console.log(FPS);
-        var sec = eventStopWatch('stop', id);
+        var sec = eventStopWatch('stop', timerid);
         console.log(sec);
-        return calculate(`Time: ${id}`);
+        return calculate(`Time: ${timerid}`);
     }
     var rand = Math.floor(Math.random() * 10000);
     scroller.scrollTo(0,rand);
 }
 
-function scrollDown(id){
+function scrollDown(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         console.log(FPS);
-        var sec = eventStopWatch('stop', id);
+        var sec = eventStopWatch('stop', timerid);
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
@@ -100,24 +100,24 @@ function eventStopWatch(cmd, timerid){
     }
 }
 
-function scrollUp(id){
+function scrollUp(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
         console.log(FPS);
-        var sec = eventStopWatch('stop', id);
+        var sec = eventStopWatch('stop', timerid);
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
     scroller.scrollBy(null, -800);
 }
 
-function loadTest(id){
+function loadTest(timerid){
     if(Ext.isReady){
-        pageLoadTime = eventStopWatch('stop', id);
+        pageLoadTime = eventStopWatch('stop', timerid);
     }else{
         setTimeout(function(){
-            loadTest(id)
+            loadTest(timerid)
         }, 1);
     }
 }
