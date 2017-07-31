@@ -196,14 +196,19 @@ class sendCMD extends Command {
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
+                    let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
-                        var load = a[test].pageLoadTime;
-                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
+                        if(first){
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].appReadyTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].appLoadTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].appLaunchTime}']`);
+                            first = false;
+                        }
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);

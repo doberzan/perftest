@@ -74,7 +74,9 @@ function calculate(comments){
         min:min,
         avg:avg,
         fps:fps,
-        pageLoadTime:pageLoadTime || 0,
+        appLoadTime: Ext._endTime - Ext._startTime,
+        appReadyTime: Ext._beforeReadyTime - Ext._startTime,
+        appLaunchTime: Ext._afterReadyTime - Ext._beforeReadyTime,
         comment:comments
 
     };
