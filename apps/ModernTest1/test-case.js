@@ -38,7 +38,7 @@ function teleportScrolling(timerid){
         console.log(sec);
         return calculate(`Time: ${timerid}`);
     }
-    var rand = Math.floor(Math.random() * 10000);
+    var rand = Math.floor(Math.random() * scroller.getMaxPosition());
     scroller.scrollTo(0,rand);
 }
 
