@@ -38,7 +38,7 @@ function teleportScrolling(timerid){
         console.log(sec);
         return calculate(`Time: ${timerid}`);
     }
-    var rand = Math.floor(Math.random() * scroller.getMaxPosition());
+    var rand = Math.floor(Math.random() * 10000);
     console.log(rand);
     scroller.scrollTo(0,rand);
 }
@@ -52,7 +52,7 @@ function scrollDown(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, 1);
+    scroller.scrollBy(null, 100);
 }
 
 //Calculates data
@@ -109,7 +109,7 @@ function scrollUp(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, -1);
+    scroller.scrollBy(null, -100);
 }
 
 function loadTest(timerid){
