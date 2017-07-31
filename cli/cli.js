@@ -218,7 +218,6 @@ class sendCMD extends Command {
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
                         console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
-                        console.log(agent + " load time:" + load);
                         logfile.write('## ' + test + '\n');
                         logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
                         logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');
