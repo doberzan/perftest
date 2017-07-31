@@ -51,7 +51,7 @@ function scrollDown(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, 800);
+    scroller.scrollBy(null, 10);
 }
 
 //Calculates data
@@ -108,7 +108,7 @@ function scrollUp(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, -800);
+    scroller.scrollBy(null, -10);
 }
 
 function loadTest(timerid){
