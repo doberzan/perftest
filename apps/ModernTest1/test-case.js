@@ -52,7 +52,8 @@ function scrollDown(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
-    scroller.scrollBy(null, 100);
+    let rand2 = Math.floor(Math.random() * 500);
+    scroller.scrollBy(null, rand2);
 }
 
 //Calculates data
