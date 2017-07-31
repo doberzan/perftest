@@ -179,11 +179,14 @@ function start(){
 }
 
 window.onload = function(){
+    debugger;
     loadTest(eventStopWatch('start'));
     if(Ext.onReady){
+        debugger;
         Ext.onReady(start);
         console.log('ready')
     }else{
+        debugger;
         console.log('not ready')
         Ext._beforereadyhandler = function(){
             Ext.onReady(start);
