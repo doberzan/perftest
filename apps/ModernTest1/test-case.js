@@ -193,3 +193,14 @@ window.onload = function(){
         }
     }
 };
+if(Ext.onReady){
+    debugger;
+    Ext.onReady(start);
+    console.log('ready')
+}else{
+    debugger;
+    console.log('not ready')
+    Ext._beforereadyhandler = function(){
+        Ext.onReady(start);
+    }
+}
