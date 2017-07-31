@@ -3,8 +3,8 @@ Ext.define('ModernTest1.store.Employees', {
     alias: 'store.employees',
     data: (function(){
         var data = [];
-        for(var j = 0; j < 100; j ++ ){
-            for(var i = 0; i < 500; i ++){
+        for(var j = 0; j < 1; j ++ ){
+            for(var i = 0; i < 50; i ++){
                 data.push({
                     firstName: 'John' + i,
                     lastName: "Quill" + i,
