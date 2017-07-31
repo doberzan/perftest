@@ -178,7 +178,7 @@ function start(){
     });
 }
 
-window.onload = function(){
+/*window.onload = function(){
     debugger;
     loadTest(eventStopWatch('start'));
     if(Ext.onReady){
@@ -193,6 +193,7 @@ window.onload = function(){
         }
     }
 };
+*/
 if(Ext.onReady){
     debugger;
     Ext.onReady(start);
