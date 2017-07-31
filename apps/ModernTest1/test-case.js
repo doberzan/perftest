@@ -182,7 +182,9 @@ window.onload = function(){
     loadTest(eventStopWatch('start'));
     if(Ext.onReady){
         Ext.onReady(start);
+        console.log('ready')
     }else{
+        console.log('not ready')
         Ext._beforereadyhandler = function(){
             Ext.onReady(start);
         }
