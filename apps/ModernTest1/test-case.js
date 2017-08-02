@@ -52,8 +52,8 @@ function scrollDown(timerid){
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
-    let rand2 = Math.floor(Math.random() * 500);
-    scroller.scrollBy(null, rand2);
+    //let rand2 = Math.floor(Math.random() * 500);
+    scroller.scrollBy(null, 100);
 }
 
 //Calculates data
@@ -194,12 +194,5 @@ function start(){
     }
 };
 */
-if(Ext.onReady){
-    Ext.onReady(start);
-    console.log('ready')
-}else{
-    console.log('not ready')
-    Ext._beforereadyhandler = function(){
-        Ext.onReady(start);
-    }
-}
+Ext.onReady(start);
+console.log('ready')
