@@ -93,7 +93,7 @@ To create a test to be run by the agents use the following as examples:
 #### Example 2: 
 ```javascript
         getCommands({
-            [....], //It is important to return a promise which will later receive your tests results.
+            [...], //It is important to return a promise which will later receive your tests results.
             <your-test-id>:function(){ 
                 return new Promise(function(resolve, reject){
                     //Use the runTest function to measure your tests performance
