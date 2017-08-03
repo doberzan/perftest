@@ -2,13 +2,10 @@ const Command = require('switchit').Command;
 const client = require('http');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
-<<<<<<< HEAD
 const util = require('util');
 const { exec } = require('child_process');
-=======
 var exec = require('child_process').exec;
 
-<<<<<<< HEAD
 function buildApp(apppath, frameworkpath){
     return execCommand(`cd ${apppath} && sencha app install --framework=${frameworkpath}`).then(function(){
         return execCommand(`cd ${apppath} && sencha app build`);
@@ -36,7 +33,6 @@ function execCommand(cmd){
         resolve(data);
     });
 };
->>>>>>> e21368cdf899d7875e06faf0b995e2e25381e3e9
 
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
@@ -70,8 +66,6 @@ function fetch(server, path, data){
                 }
             }); 
         });
-=======
-
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
         try{
@@ -108,7 +102,6 @@ function fetch(server, path, data){
                 reject('failed');
                 console.log("Got error: " + e.message);
             });;
->>>>>>> 5812b7d3b417bbd9e995680de8419852d0acbd67
 
             post_req.write(post_data);
         }catch(e){
@@ -135,8 +128,6 @@ function serveBuild(server, buildPath, buildUuid){
     });
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 //build framework
 exec(`cd ${path} & sencha app install --framework=${frameworkpath} & sencha app build`, (err, stdout, stderr) => {
   if (err) {
@@ -146,13 +137,7 @@ exec(`cd ${path} & sencha app install --framework=${frameworkpath} & sencha app 
   console.log(`stdout: ${stdout}`);
 });
 
-function runTestSequence(agent, tests, server, build, buildUuid){
-=======
-function runTestSequence(agent, tests, server, framework, buildUuid){
->>>>>>> e21368cdf899d7875e06faf0b995e2e25381e3e9
-=======
 function runTestSequence(agent, tests, server, app, buildUuid){
->>>>>>> 5812b7d3b417bbd9e995680de8419852d0acbd67
     let results = {};
     let agentUuid = uuidv4();
     try{
@@ -182,7 +167,6 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
-                    throw err;
                     console.log('nope2');
                     results[test] = {
                         min:0,
@@ -223,7 +207,6 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 return results;
             }, function(err){
                 console.log('nope4');
-                throw err;
                     return {
                         min:0,
                         avg:0,
