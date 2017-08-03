@@ -2,70 +2,9 @@ const Command = require('switchit').Command;
 const client = require('http');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
-const util = require('util');
-const { exec } = require('child_process');
 var exec = require('child_process').exec;
 
-function buildApp(apppath, frameworkpath){
-    return execCommand(`cd ${apppath} && sencha app install --framework=${frameworkpath}`).then(function(){
-        return execCommand(`cd ${apppath} && sencha app build`);
-    });
-}
 
-function execCommand(cmd){
-    return new Promise(function(resolve, reject){
-        var child = exec(cmd);
-        child.stdout.setEncoding('utf8');
-        var data = [];
-        child.stdout.on('data', (chunk) => {
-            chunk = chunk.replace('\n', '');
-            data.push(chunk);
-            console.log(chunk);
-        });
-        child.stdout.on('error', function(err){
-            console.log(err);
-            reject(err);
-        });
-        child.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            //console.log(data);
-        });
-        resolve(data);
-    });
-};
-
-function fetch(server, path, data){
-    return new Promise(function(resolve, reject){
-        let post_data = JSON.stringify(data);
-        let post_options = {
-            host: server,
-            port: '8080',
-            path: path,
-            method: 'POST',
-            headers: {  
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(post_data)
-            },
-            timeout: 500 * 100
-        };
-        let post_req = client.request(post_options, function(res) {
-            res.setEncoding('utf8');
-            let responseBody = '';
-            res.on('data', function (chunk) {
-                responseBody += chunk;
-            });
-            
-            res.on('end', function () {
-                try{
-                    let j = JSON.parse(responseBody);
-                    resolve(j);
-                }catch(e){
-                    resolve(undefined);
-                    console.log(e);
-                    console.log('Failed to parse:', responseBody);
-                }
-            }); 
-        });
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
         try{
@@ -128,15 +67,6 @@ function serveBuild(server, buildPath, buildUuid){
     });
 }
 
-//build framework
-exec(`cd ${path} & sencha app install --framework=${frameworkpath} & sencha app build`, (err, stdout, stderr) => {
-  if (err) {
-    // node couldn't execute the command
-    return;
-  }
-  console.log(`stdout: ${stdout}`);
-});
-
 function runTestSequence(agent, tests, server, app, buildUuid){
     let results = {};
     let agentUuid = uuidv4();
@@ -167,6 +97,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
+                    throw err;
                     console.log('nope2');
                     results[test] = {
                         min:0,
@@ -207,6 +138,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 return results;
             }, function(err){
                 console.log('nope4');
+                throw err;
                     return {
                         min:0,
                         avg:0,
