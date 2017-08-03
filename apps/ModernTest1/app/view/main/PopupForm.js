@@ -1,4 +1,4 @@
-Ext.define('QuickStart.view.main.PopupForm', {
+Ext.define('ModernTest1.view.main.PopupForm', {
     extend: 'Ext.form.Panel',
     xtype: 'popupform',
     controller: 'popupform',

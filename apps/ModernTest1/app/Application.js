@@ -3,10 +3,10 @@
  * calls Ext.application(). This is the ideal place to handle application launch and
  * initialization details.
  */
-Ext.define('QuickStart.Application', {
+Ext.define('ModernTest1.Application', {
     extend: 'Ext.app.Application',
 
-    name: 'QuickStart',
+    name: 'ModernTest1',
 
     // The application is launched using the mainView config in app.js
     //

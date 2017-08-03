@@ -13,9 +13,9 @@ function runTest(test, resolve, reject){
         }, 50);
         return;
     }
-    var id = eventStopWatch('start');
-     let intervalId = setInterval(function(){
-        let result = test(id);
+    var timerid = eventStopWatch('start');
+    let intervalId = setInterval(function(){
+        let result = test(timerid);
         if(result){
             clearInterval(intervalId);
             cancelAnimationFrame(animId);
@@ -29,17 +29,30 @@ function runTest(test, resolve, reject){
 
 }
 
-//clear
+function teleportScrolling(timerid){
+    let cmp = Ext.getCmp('thegrid');
+    let scroller = cmp.getScrollable();
+    if(eventStopWatch('getTime', timerid) > 5000){
+        console.log(FPS);
+        var sec = eventStopWatch('stop', timerid);
+        console.log(sec);
+        return calculate(`Time: ${timerid}`);
+    }
+    var rand = Math.floor(Math.random() * 500000);
+    console.log(rand);
+    scroller.scrollTo(0,rand);
+}
 
-function scrollDown(id){
+function scrollDown(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         console.log(FPS);
-        var sec = eventStopWatch('stop', id);
+        var sec = eventStopWatch('stop', timerid);
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
+    //let rand2 = Math.floor(Math.random() * 500);
     scroller.scrollBy(null, 100);
 }
 
@@ -63,45 +76,49 @@ function calculate(comments){
         min:min,
         avg:avg,
         fps:fps,
-        pageLoadTime:pageLoadTime,
+        appLoadTime: Ext._endTime - Ext._startTime,
+        appReadyTime: Ext._beforeReadyTime - Ext._startTime,
+        appLaunchTime: Ext._afterReadyTime - Ext._beforeReadyTime,
         comment:comments
 
     };
 }
 
-
-function eventStopWatch(cmd, id){
+function eventStopWatch(cmd, timerid){
     if(cmd == 'start'){
         eventTimerId = lastId ++;
         timerIds[eventTimerId] = {};
         timerIds[eventTimerId].num = performance.now();
         return eventTimerId;
     }else if(cmd == 'stop'){
-        var n = timerIds[id].num;
-        delete timerIds[id];
+        var n = timerIds[timerid].num;
+        delete timerIds[timerid];
         console.log(performance.now() - n);
+        return performance.now() - n;
+    }else if(cmd == 'getTime'){
+        var n = timerIds[timerid].num;
         return performance.now() - n;
     }
 }
 
-function scrollUp(id){
+function scrollUp(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
         console.log(FPS);
-        var sec = eventStopWatch('stop', id);
+        var sec = eventStopWatch('stop', timerid);
         console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
     scroller.scrollBy(null, -100);
 }
 
-function loadTest(id){
+function loadTest(timerid){
     if(Ext.isReady){
-        pageLoadTime = eventStopWatch('stop', id);
+        pageLoadTime = eventStopWatch('stop', timerid);
     }else{
         setTimeout(function(){
-            loadTest(id)
+            loadTest(timerid)
         }, 1);
     }
 }
@@ -136,6 +153,11 @@ function start(){
                 runTest(scrollUp,resolve, reject);
             });
         },
+        teleportScrolling:function(){
+            return new Promise(function(resolve, reject){
+                runTest(teleportScrolling,resolve, reject);
+            });
+        },
         redirect:function(test){
             return {
                 $value:false,
@@ -156,13 +178,21 @@ function start(){
     });
 }
 
-window.onload = function(){
+/*window.onload = function(){
+    debugger;
     loadTest(eventStopWatch('start'));
     if(Ext.onReady){
+        debugger;
         Ext.onReady(start);
+        console.log('ready')
     }else{
+        debugger;
+        console.log('not ready')
         Ext._beforereadyhandler = function(){
             Ext.onReady(start);
         }
     }
 };
+*/
+Ext.onReady(start);
+console.log('ready')

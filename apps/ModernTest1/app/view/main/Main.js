@@ -19,7 +19,7 @@ for(var sorter in lotsofsorters){
             flex: 1
         });
 }
-Ext.define('QuickStart.view.main.Main', {
+Ext.define('ModernTest1.view.main.Main', {
     extend: 'Ext.tab.Panel',
     controller: 'listview',
     items: [{

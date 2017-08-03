@@ -126,12 +126,10 @@ let testPages = {
 
 
 function serveBuild(server, buildPath, buildUuid){
-    var path = __dirname +'/'+ buildPath;
-    console.log(path);
     return fetch(server, '/~api/cmd/',{
         cmd:{
             type:'serve',
-            data:path,
+            data:buildPath,
             buildUuid:buildUuid
         }
     });
@@ -165,16 +163,14 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 data:'/' + buildUuid + '/' + '?id=' + agentUuid
             }
         }).then(function(data){
-            console.log(data)
+           // console.log(data)
         }, function(err){
-            return {
-                min:0,
-                avg:0,
-                fps:[0],
-                load:0,
-                comment:'Lost connection to agent'
-            };
+            console.log('nope');
+            return 'failed';
         });
+        if(promise == 'failed'){
+                return results;
+        }
         for(let test of tests){
             promise = promise.then(function(data){
                 return fetch(server, '/~api/cmd/',{
@@ -186,6 +182,15 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
+                    throw err;
+                    console.log('nope2');
+                    results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
                     return {
                         min:0,
                         avg:0,
@@ -195,13 +200,15 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                     };
                 });
             }, function(err){
-                return {
-                    min:0,
-                    avg:0,
-                    fps:[0],
-                    load:0,
-                    comment:'Lost connection to agent'
-                };
+                results[test] = {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
+                console.log('nope3');
+                throw err;
             });
         }
 
@@ -215,18 +222,22 @@ function runTestSequence(agent, tests, server, app, buildUuid){
             }).then(function(){
                 return results;
             }, function(err){
-                return {
-                    min:0,
-                    avg:0,
-                    fps:[0],
-                    load:0,
-                    comment:'Lost connection to agent'
-                };
+                console.log('nope4');
+                throw err;
+                    return {
+                        min:0,
+                        avg:0,
+                        fps:[0],
+                        load:0,
+                        comment:'Lost connection to agent'
+                    };
             });
         })
     }catch(e){
+        console.log('nope5');
         console.log("Lost connection to agent " + agent + "!");
-        return false;
+        promise = results;
+        return promise;
     }
 }
 
@@ -258,7 +269,7 @@ class sendCMD extends Command {
                     data:params.test
                 }
             }).then(function(data){
-                console.log(data);
+               // console.log(data);
             });
         }else{
             let logfile = fs.createWriteStream('RESULTS.md')
@@ -270,14 +281,19 @@ class sendCMD extends Command {
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 for(let agent in results) {
+                    let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
-                        var load = a[test].load;
-                        console.log(`##teamcity[buildStatisticValue key='<${agent}.load>' value='${load}']`);
+                        if(first){
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].appReadyTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].appLoadTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].appLaunchTime}']`);
+                            first = false;
+                        }
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
@@ -287,7 +303,6 @@ class sendCMD extends Command {
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
                         console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
-                        console.log(agent + " load time:" + load);
                         logfile.write('## ' + test + '\n');
                         logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
                         logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');

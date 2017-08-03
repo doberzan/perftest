@@ -1,15 +1,10 @@
-Ext.define('QuickStart.store.Employees', {
+Ext.define('ModernTest1.store.Employees', {
     extend: 'Ext.data.Store',
     alias: 'store.employees',
-
-    /*proxy: {
-        type: 'ajax',
-        url: 'data/data.json'
-    },*/
     data: (function(){
         var data = [];
-        for(var j = 0; j < 500; j ++ ){
-            for(var i = 0; i < 20; i ++){
+        for(var j = 0; j < 100; j ++ ){
+            for(var i = 0; i < 50; i ++){
                 data.push({
                     firstName: 'John' + i,
                     lastName: "Quill" + i,
