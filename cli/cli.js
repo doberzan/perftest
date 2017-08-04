@@ -187,7 +187,7 @@ class sendCMD extends Command {
                // console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('RESULTS.md')
+            let logfile = fs.createWriteStream('RESULTS.md');
             fs.access(params.app, function(e){
                 if(e){
                     console.error('Warning! WebApp does not exist');
@@ -195,6 +195,7 @@ class sendCMD extends Command {
             });
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
+                fs.writeFileSync('results.json', JSON.stringify({raw:results}), 'utf8');
                 for(let agent in results) {
                     let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
