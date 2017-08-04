@@ -195,7 +195,7 @@ class sendCMD extends Command {
             });
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                fs.writeFileSync('results.json', JSON.stringify({raw:results}), 'utf8');
+                fs.writeFileSync('results.json', JSON.stringify({raw:results}, null, "    "), 'utf8');
                 for(let agent in results) {
                     let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
