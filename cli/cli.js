@@ -279,7 +279,7 @@ class sendCMD extends Command {
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 if(params.prtest){
-                    compareResultToHistory();
+                    compareResultToHistory(results);
                 }else{
                     saveResultsToHistory(results, params.reset);
                 }
