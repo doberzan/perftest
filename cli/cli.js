@@ -197,16 +197,18 @@ function parseHistory(results){
          //   console.log(app);
           //  var rapp = app;
          //   var happ = ha[app] || (ha[app] = {});
-            for(var test in rapp){
-                console.log(test);
-               // var ht = happ[test] || (happ[test] = {});
-                var ht = ha[test] || (ha[test] = {});
-                var rtest = test;
-                for(var result in rtest){
-                    console.log(result);
-                    var hr = ht[result] || (ht[result] = [])
-                    var rr = rtest[result]; 
-                    hr.push(rr);
+            for(var test in ra){
+                if(!test == 'appLoadTime' || !test == 'appReadyTime' || !test == 'appLaunchTime'){
+                    console.log(test);
+                    // var ht = happ[test] || (happ[test] = {});
+                    var ht = ha[test] || (ha[test] = {});
+                    var rtest = test;
+                    for(var result in rtest){
+                        console.log(result);
+                        var hr = ht[result] || (ht[result] = [])
+                        var rr = rtest[result]; 
+                        hr.push(rr);
+                    }
                 }
             }
       // }
