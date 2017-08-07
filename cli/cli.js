@@ -187,8 +187,7 @@ function getHistory(){
     }
 }
 
-function parseHistory(results){
-    var history = getHistory();
+function parseHistory(results, history){
     var raw = results;
     for(var agent in raw){
        var ha = history[agent] || (history[agent] = {}); 
@@ -216,7 +215,7 @@ function parseHistory(results){
 }
 
 function writeData(results, reset){
-    let history = reset ? {} : parseHistory(results)
+    let history = parseHistory(results, reset ? {} : getHistory());
     let raw = results;
     let data = {
         raw:raw,
