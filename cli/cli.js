@@ -192,7 +192,8 @@ function parseHistory(results){
     var raw = results;
     for(var agent in raw){
        var ha = history[agent] || (history[agent] = {}); 
-       var ra = agent;
+       var ra = raw[agent];
+       console.log("Agent:", ra)
        //for(var app in ra){
          //   console.log(app);
           //  var rapp = app;
@@ -202,7 +203,7 @@ function parseHistory(results){
                     console.log(test);
                     // var ht = happ[test] || (happ[test] = {});
                     var ht = ha[test] || (ha[test] = {});
-                    var rtest = test;
+                    var rtest = ra[test];
                     for(var result in rtest){
                         console.log(result);
                         var hr = ht[result] || (ht[result] = [])
