@@ -193,13 +193,14 @@ function parseHistory(results){
     for(var agent in raw){
        var ha = history[agent] || (history[agent] = {}); 
        var ra = agent;
-       for(var app in ra){
-            console.log(app);
-            var rapp = app;
-            var happ = ha[app] || (ha[app] = {});
+       //for(var app in ra){
+         //   console.log(app);
+          //  var rapp = app;
+         //   var happ = ha[app] || (ha[app] = {});
             for(var test in rapp){
                 console.log(test);
-                var ht = happ[test] || (happ[test] = {});
+               // var ht = happ[test] || (happ[test] = {});
+                var ht = ha[test] || (ha[test] = {});
                 var rtest = test;
                 for(var result in rtest){
                     console.log(result);
@@ -208,7 +209,7 @@ function parseHistory(results){
                     hr.push(rr);
                 }
             }
-       }
+      // }
     }
     return history;
 }
