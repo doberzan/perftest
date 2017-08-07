@@ -76,9 +76,6 @@ function calculate(comments){
         min:min,
         avg:avg,
         fps:fps,
-        appLoadTime: Ext._endTime - Ext._startTime,
-        appReadyTime: Ext._beforeReadyTime - Ext._startTime,
-        appLaunchTime: Ext._afterReadyTime - Ext._beforeReadyTime,
         comment:comments
 
     };
@@ -157,6 +154,13 @@ function start(){
             return new Promise(function(resolve, reject){
                 runTest(teleportScrolling,resolve, reject);
             });
+        },
+        modernTest1:function(){
+            return {
+                loadTime: Ext._endTime - Ext._startTime,
+                readyTime: Ext._beforeReadyTime - Ext._startTime,
+                launchTime: Ext._afterReadyTime - Ext._beforeReadyTime
+            }
         },
         redirect:function(test){
             return {

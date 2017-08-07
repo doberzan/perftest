@@ -25,7 +25,7 @@
             "name": "cli",
             "cwd": "${workspaceRoot}/cli",
             "program": "${workspaceRoot}/cli/cli.js",
-            "args": ["-server", "192.168.1.144", "-agents", "mac,ipad", "-test", "scrollDown", "-app", "/home/perftest/Apps/QuickStart/"] 
+            "args": ["-server", "192.168.1.144", "-agents", "mac,ipad", "-test", "scrollDown", "-app", "/home/perftest/Apps/QuickStart/", "-reset"] 
         }
     ]
 }

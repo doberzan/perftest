@@ -215,8 +215,8 @@ function parseHistory(results){
     return history;
 }
 
-function writeData(results){
-    let history = parseHistory(results)
+function writeData(results, reset){
+    let history = reset ? {} : parseHistory(results)
     let raw = results;
     let data = {
         raw:raw,
@@ -246,7 +246,7 @@ class sendCMD extends Command {
             });
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                writeData(results);
+                writeData(results, params.reset);
                 for(let agent in results) {
                     let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
@@ -283,7 +283,7 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches: ['server', 'agents' , 'tests' , 'app'],
+    switches:'server agents tests app [reset:boolean=false]',
     parameters: ['server', 'agents', 'tests', 'app']
 });
 
