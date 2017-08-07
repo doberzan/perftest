@@ -215,20 +215,24 @@ function compareResultToHistory(results){
     let raw = results;
     let resultfile = fs.createWriteStream('results.md');
     for(var agent in raw){
-       var ha = history[agent] || (history[agent] = {}); 
+       var ha = history[agent] 
        var ra = raw[agent];
         for(var test in ra){
-            var ht = ha[test] || (ha[test] = {});
+            var htest = ha[test] 
             var rtest = ra[test];
-            for(var result in rtest){
-                if(ht[result]){
-                    if(ht.fps && result !== ht.comments){
-                        var hr = ht[result]
-                        var rr = rtest[result];
-                        let hrstd = math.std(hr);
-                        console.log(hr, " ::: ", result);
-                        console.log(hrstd);
-                    }else{
+            if(rtest.fps){
+                let hrstd = math.std(rtest.fps);
+                console.log(rtest, " ::: ", result);
+                console.log(hrstd);
+            }else{
+                for(var result in rtest){
+                    if(ht[result]){
+                    var hr = ht[result]
+                    var rr = rtest[result];
+                    let hrstd = math.std(hr);
+                    console.log(hr, " ::: ", result);
+                    console.log(hrstd);
+        
                     }
                 }
             }
