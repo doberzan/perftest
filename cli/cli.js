@@ -180,12 +180,11 @@ function getHistory(){
     try{
         let rawdata = fs.readFileSync('results.json', 'utf8');
         let data = JSON.parse(rawdata);
-        let history = data.history || {};
+        return data.history || {};
     }catch(e){
+        console.log('Failed to read results.json: ', e);
         return {};
-        console.log(e);
     }
-    return history;
 }
 
 function parseHistory(results){
