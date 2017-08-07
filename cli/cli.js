@@ -227,6 +227,7 @@ function writeData(results, reset){
 
 class sendCMD extends Command {
     execute (params) {
+        console.log(params)
         if(params.tests == 'listagents'){
             fetch(params.server, '/~api/cmd/',{
                 cmd:{
