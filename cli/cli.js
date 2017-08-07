@@ -194,12 +194,15 @@ function parseHistory(results){
        var ha = history[agent] || (history[agent] = {}); 
        var ra = agent;
        for(var app in ra){
+            console.log(app);
             var rapp = app;
             var happ = ha[app] || (ha[app] = {});
             for(var test in rapp){
+                console.log(test);
                 var ht = happ[test] || (happ[test] = {});
                 var rtest = test;
                 for(var result in rtest){
+                    console.log(result);
                     var hr = ht[result] || (ht[result] = [])
                     var rr = rtest[result]; 
                     hr.push(rr);
