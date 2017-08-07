@@ -175,6 +175,48 @@ function runTests(agents, tests, server, app){
     });
 }
 
+
+function getHistory(){
+    let rawdata = fs.readFileSync('results.json', 'utf8');
+    let data = JSON.parse(rawdata);
+    let history = data.history;
+    return history;
+}
+
+function parseHistory(results){
+    let history = getHistory();
+    let raw = results;
+    for(let agent in raw){
+       let ha = history[agent] || (history[agent] = {}); 
+       let ra = agent;
+       for(let app in ra){
+            let rapp = app;
+            let happ = ha[app] || (ha[app] = {});
+            for(let test in rapp){
+                let ht = happ[test] || (happ[test] = {});
+                let rtest = test;
+                for(let result in rtest){
+                    let hr = ht[result] || (ht[result] = [])
+                    let rr = rtest[result]; 
+                    hr.push(rr);
+                }
+            }
+       }
+    }
+    return history;
+}
+
+function writeData(results){
+    let history = parseHistory()
+    let raw = results;
+    let data = {
+        raw:raw,
+        history:history
+    }
+    fs.writeFileSync('results.json', JSON.stringify(data, null, "    "), 'utf8');
+}
+
+
 class sendCMD extends Command {
     execute (params) {
         if(params.tests == 'listagents'){
@@ -195,7 +237,7 @@ class sendCMD extends Command {
             });
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                fs.writeFileSync('results.json', JSON.stringify({raw:results}, null, "    "), 'utf8');
+                writeData(results);
                 for(let agent in results) {
                     let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
