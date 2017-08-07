@@ -211,7 +211,7 @@ function parseHistory(results){
 }
 
 function writeData(results){
-    let history = parseHistory()
+    let history = parseHistory(results)
     let raw = results;
     let data = {
         raw:raw,
