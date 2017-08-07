@@ -5,6 +5,7 @@
   "main": "cli.js",
   "dependencies": {
     "fs": "0.0.1-security",
+    "mathjs": "^3.16.0",
     "switchit": "^1.0.7",
     "uuid": "^3.1.0"
   },

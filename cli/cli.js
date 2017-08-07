@@ -2,8 +2,7 @@ const Command = require('switchit').Command;
 const client = require('http');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
-var exec = require('child_process').exec;
-
+const math = require('mathjs');
 
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
@@ -187,35 +186,68 @@ function getHistory(){
     }
 }
 
-function parseHistory(results, history){
+function updateHistory(results, history){
     var raw = results;
     for(var agent in raw){
        var ha = history[agent] || (history[agent] = {}); 
        var ra = raw[agent];
        console.log("Agent:", ra)
-       //for(var app in ra){
-         //   console.log(app);
-          //  var rapp = app;
-         //   var happ = ha[app] || (ha[app] = {});
-            for(var test in ra){
-                console.log(test);
-                // var ht = happ[test] || (happ[test] = {});
-                var ht = ha[test] || (ha[test] = {});
-                var rtest = ra[test];
-                for(var result in rtest){
-                    console.log(result);
-                    var hr = ht[result] || (ht[result] = [])
-                    var rr = rtest[result]; 
-                    hr.push(rr);
+        for(var test in ra){
+            console.log(test);
+            var ht = ha[test] || (ha[test] = {});
+            var rtest = ra[test];
+            for(var result in rtest){
+                console.log(result);
+                var hr = ht[result] || (ht[result] = [])
+                var rr = rtest[result];
+                if(hr.length >= 100){
+                    hr.shift();
                 }
+                hr.push(rr);
+                
             }
-      // }
+        }
     }
     return history;
 }
+function compareResultToHistory(results){
+    let history = getHistory();
+    let raw = results;
+    let resultfile = fs.createWriteStream('results.md');
+    for(var agent in raw){
+       var ha = history[agent] || (history[agent] = {}); 
+       var ra = raw[agent];
+        for(var test in ra){
+            var ht = ha[test] || (ha[test] = {});
+            var rtest = ra[test];
+            for(var result in rtest){
+                if(ht[result]){
+                    if(ht.fps){
+                        var hr = ht[result]
+                        var rr = rtest[result];
+                        let hrstd = math.std(hr);
+                        console.log(hrstd);
+                    }else{
+                        var hr = ht[result]
+                        var rr = rtest[result];
+                        let hrstd = math.std(hr)
+                        console.log(hrstd);
+                    }
+                }
+            }
+        }
+    }
+    resultfile.end();
 
-function writeData(results, reset){
-    let history = parseHistory(results, reset ? {} : getHistory());
+}
+function round(num, place) {
+    let p = Math.pow(10, place || 0);
+    return Math.round(num * p) / p;
+}
+
+
+function saveResultsToHistory(results, reset){
+    let history = updateHistory(results, reset ? {} : getHistory());
     let raw = results;
     let data = {
         raw:raw,
@@ -246,7 +278,11 @@ class sendCMD extends Command {
             });
 
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                writeData(results, params.reset);
+                if(params.prtest){
+                    compareResultToHistory();
+                }else{
+                    saveResultsToHistory(results, params.reset);
+                }
                 for(let agent in results) {
                     let first = true;
                     logfile.write('# ' + agent.toUpperCase() + '\n');
@@ -283,7 +319,7 @@ class sendCMD extends Command {
 }
 
 sendCMD.define({
-    switches:'server agents tests app [reset:boolean=false]',
+    switches:'server agents tests app [reset:boolean=false] [prtest:boolean=false]',
     parameters: ['server', 'agents', 'tests', 'app']
 });
 
