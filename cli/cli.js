@@ -177,9 +177,14 @@ function runTests(agents, tests, server, app){
 
 
 function getHistory(){
-    let rawdata = fs.readFileSync('results.json', 'utf8');
-    let data = JSON.parse(rawdata);
-    let history = data.history;
+    try{
+        let rawdata = fs.readFileSync('results.json', 'utf8');
+        let data = JSON.parse(rawdata);
+        let history = data.history;
+    }catch(e){
+        return {};
+        console.log(e);
+    }
     return history;
 }
 
@@ -211,7 +216,7 @@ function writeData(results){
     let raw = results;
     let data = {
         raw:raw,
-        history:history
+        history:history || {}
     }
     fs.writeFileSync('results.json', JSON.stringify(data, null, "    "), 'utf8');
 }
