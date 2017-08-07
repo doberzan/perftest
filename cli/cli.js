@@ -226,12 +226,9 @@ function compareResultToHistory(results){
                         var hr = ht[result]
                         var rr = rtest[result];
                         let hrstd = math.std(hr);
+                        console.log(hr, " ::: ", result);
                         console.log(hrstd);
                     }else{
-                        var hr = ht[result]
-                        var rr = rtest[result];
-                        let hrstd = math.std(hr)
-                        console.log(hrstd);
                     }
                 }
             }
