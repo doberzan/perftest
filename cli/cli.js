@@ -225,6 +225,7 @@ function compareResultToHistory(results){
                 console.log(rtest, " ::: ", result);
                 console.log(hrstd);
             }else{
+                /*
                 for(var result in rtest){
                     if(ht[result]){
                     var hr = ht[result]
@@ -235,6 +236,7 @@ function compareResultToHistory(results){
         
                     }
                 }
+                */
             }
         }
     }
