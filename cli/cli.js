@@ -222,7 +222,7 @@ function compareResultToHistory(results){
             var rtest = ra[test];
             for(var result in rtest){
                 if(ht[result]){
-                    if(ht.fps){
+                    if(ht.fps && result !== ht.comments){
                         var hr = ht[result]
                         var rr = rtest[result];
                         let hrstd = math.std(hr);
