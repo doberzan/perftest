@@ -188,20 +188,20 @@ function getHistory(){
 }
 
 function parseHistory(results){
-    let history = getHistory();
-    let raw = results;
-    for(let agent in raw){
-       let ha = history[agent] || (history[agent] = {}); 
-       let ra = agent;
-       for(let app in ra){
-            let rapp = app;
-            let happ = ha[app] || (ha[app] = {});
-            for(let test in rapp){
-                let ht = happ[test] || (happ[test] = {});
-                let rtest = test;
-                for(let result in rtest){
-                    let hr = ht[result] || (ht[result] = [])
-                    let rr = rtest[result]; 
+    var history = getHistory();
+    var raw = results;
+    for(var agent in raw){
+       var ha = history[agent] || (history[agent] = {}); 
+       var ra = agent;
+       for(var app in ra){
+            var rapp = app;
+            var happ = ha[app] || (ha[app] = {});
+            for(var test in rapp){
+                var ht = happ[test] || (happ[test] = {});
+                var rtest = test;
+                for(var result in rtest){
+                    var hr = ht[result] || (ht[result] = [])
+                    var rr = rtest[result]; 
                     hr.push(rr);
                 }
             }
