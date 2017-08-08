@@ -93,6 +93,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                         type:test,
                         data:test  
                     }
+                    
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
