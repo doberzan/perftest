@@ -247,10 +247,10 @@ function compareResultToHistory(results){
                 }
             }
             if(status){
-                resultfile.write('***PASSED*** <img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/pass.png" alt="Passed" width="20" height="20">\n')
+                resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/pass.png" alt="Passed" width="20" height="20"> ***PASSED***\n')
                 
             }else{
-                resultfile.write('***FAILED*** <img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png" alt="Failed" width="20" height="20">\n')
+                resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png" alt="Failed" width="20" height="20"> ***FAILED*** \n')
             }
         }
     }
