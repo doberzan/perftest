@@ -247,7 +247,8 @@ function compareResultToHistory(results){
                 }
             }
             if(status){
-                resultfile.write('***PASSED***\n')
+                resultfile.write("![alt text][logo]\n");
+                resultfile.write('***PASSED*** [logo]:https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwim3bbw78rVAhVnilQKHSG0ATQQjRwIBw&url=http%3A%2F%2Fwww.proicons.com%2F&psig=AFQjCNFuBOFr5ZgE1HuXmCeSa-bVzD_Rxg&ust=1502392908670609\n')
                 resultfile.write('============')
             }else{
                 resultfile.write('***FAILED***\n')
