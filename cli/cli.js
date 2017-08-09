@@ -210,9 +210,11 @@ function compareResultToHistory(results){
                     let hrstd = math.std(htest.fps);
                     let hrmean = math.mean(htest.fps);
                     console.log('hrmean - hrstd:', (hrmean - hrstd), 'hrmean:', hrmean, 'hrstd:', hrstd);
-                    if(rtest.fps > hrmean - hrstd){
+                    if(rtest.avg > hrmean - hrstd){
+                        console.log('AVG:', rtest.avg)
                         console.log('PASSED:', hrmean)
                     }else{
+                        console.log('AVG:',rtest.avg)
                         console.log('FAILED:', hrmean)
                     }
                     console.log(rtest, " ::: ", result);
