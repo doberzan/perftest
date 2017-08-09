@@ -200,35 +200,37 @@ function compareResultToHistory(results){
     let raw = results;
     let resultfile = fs.createWriteStream('results.md');
     for(var agent in raw){
-       var ha = history[agent] 
-       var ra = raw[agent];
-        for(var test in ra){
-            var htest = ha[test] 
-            var rtest = ra[test];
-            if(rtest.fps){
-                let hrstd = math.std(htest.fps);
-                let hrmean = math.mean(htest.fps);
-                if(rtest.fps > hrmean){
-                    console.log('PASSED:', hrmean)
-                }else{
-                    console.log('FAILED:', hrmean)
-                }
-                console.log(rtest, " ::: ", result);
-                console.log(hrstd);
-            }else{
-                console.log('other');
-                /*
-                for(var result in rtest){
-                    if(ht[result]){
-                    var hr = ht[result]
-                    var rr = rtest[result];
-                    let hrstd = math.std(hr);
-                    console.log(hr, " ::: ", result);
-                    console.log(hrstd);
-        
+        if(history[agent]){
+            var ha = history[agent] 
+            var ra = raw[agent];
+            for(var test in ra){
+                var htest = ha[test] 
+                var rtest = ra[test];
+                if(rtest.fps){
+                    let hrstd = math.std(htest.fps);
+                    let hrmean = math.mean(htest.fps);
+                    if(rtest.fps > hrmean){
+                        console.log('PASSED:', hrmean)
+                    }else{
+                        console.log('FAILED:', hrmean)
                     }
+                    console.log(rtest, " ::: ", result);
+                    console.log(hrstd);
+                }else{
+                    console.log('other');
+                    /*
+                    for(var result in rtest){
+                        if(ht[result]){
+                        var hr = ht[result]
+                        var rr = rtest[result];
+                        let hrstd = math.std(hr);
+                        console.log(hr, " ::: ", result);
+                        console.log(hrstd);
+            
+                        }
+                    }
+                    */
                 }
-                */
             }
         }
     }
