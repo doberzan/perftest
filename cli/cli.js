@@ -233,7 +233,7 @@ function compareResultToHistory(results){
                         hrmean = round(hrmean,2);
                         num = round(num,2);
                         hrstd = round(hrstd, 4)
-                        if(mean < hrmean + hrstd){
+                        if(num < hrmean + hrstd){
                             resultfile.write(`- ${result} - OK (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
                             console.log(`OK: (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }else{
@@ -250,7 +250,7 @@ function compareResultToHistory(results){
                 resultfile.write('***PASSED*** ![alt text](https://raw.githubusercontent.com/doberzan/perftest/master/cli/pass.png "Passed!")\n')
                 
             }else{
-                resultfile.write('***FAILED*** ![alt text](https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png "Passed!")\n')
+                resultfile.write('***FAILED*** ![alt text](https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png "Failed!")\n')
             }
         }
     }
