@@ -247,10 +247,10 @@ function compareResultToHistory(results){
                 }
             }
             if(status){
-                resultfile.write('`***PASSED***`')
+                resultfile.write('***PASSED***\n')
                 resultfile.write('============')
             }else{
-                resultfile.write('`***FAILED***`')
+                resultfile.write('***FAILED***\n')
                 resultfile.write('============')
             }
         }
