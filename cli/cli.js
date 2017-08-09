@@ -212,26 +212,26 @@ function compareResultToHistory(results){
                     let hrmean = math.mean(htest.fps);
                     let fpsmean = math.mean(rtest.fps);
                     if(fpsmean > hrmean - hrstd){
-                        resultfile.write(`- ${rtest} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
+                        resultfile.write(`- ${test} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`OK: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }else{
-                        resultfile.write(`- ${rtest} - **FAILED** (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
+                        resultfile.write(`- ${test} - **FAILED** (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`FAILED: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }
-                }else{
-                    console.log('other');
-                    /*
+                }else if(rtest.loadTime){
+                    console.log('loadtimesåå')
                     for(var result in rtest){
-                        if(ht[result]){
-                        var hr = ht[result]
-                        var rr = rtest[result];
-                        let hrstd = math.std(hr);
-                        console.log(hr, " ::: ", result);
-                        console.log(hrstd);
-            
+                        let hrstd = math.std(htest[result]);
+                        let hrmean = math.mean(htest[result]);
+                        let mean = math.mean(rtest[result]);
+                        if(mean > hrmean - hrstd){
+                            resultfile.write(`- ${test} - OK (${mean} vs ${hrmean} +/- ${hrstd})\n`);
+                            console.log(`OK: (${mean} vs ${hrmean} +/- ${hrstd})`);
+                        }else{
+                            resultfile.write(`- ${test} - **FAILED** (${mean} vs ${hrmean} +/- ${hrstd})\n`);
+                            console.log(`FAILED: (${mean} vs ${hrmean} +/- ${hrstd})`);
                         }
                     }
-                    */
                 }
             }
         }
