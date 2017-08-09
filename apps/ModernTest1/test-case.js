@@ -198,5 +198,10 @@ function start(){
     }
 };
 */
-Ext.onReady(start);
-console.log('ready')
+Ext.onReady(function(){
+    console.log('defer')
+    Ext.defer(function(){
+        start();   
+        console.log('starting')
+    }, 1000);
+});
