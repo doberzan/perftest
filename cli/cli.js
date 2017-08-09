@@ -204,7 +204,7 @@ function compareResultToHistory(results){
         if(history[agent]){
             var ha = history[agent] 
             var ra = raw[agent];
-            console.log("looping agent:",test);
+            console.log("looping agent:", agent);
             for(var test in ra){
                 var htest = ha[test] 
                 var rtest = ra[test];
@@ -274,7 +274,7 @@ class sendCMD extends Command {
             });
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                console.log(results.ipad.modernTest1)
+                console.log(results)
                 if(params.prtest){
                     compareResultToHistory(results);
                 }else{
