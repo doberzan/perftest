@@ -288,9 +288,9 @@ class sendCMD extends Command {
                         var a = results[agent];
                         var fps = a[test].avg;
                         if(first){
-                            console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].appReadyTime}']`);
-                            console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].appLoadTime}']`);
-                            console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].appLaunchTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
                             first = false;
                         }
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
