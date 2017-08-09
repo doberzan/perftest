@@ -207,6 +207,7 @@ function compareResultToHistory(results){
             for(var test in ra){
                 var htest = ha[test] 
                 var rtest = ra[test];
+                console.log(rtest);
                 if(rtest.fps){
                     let hrstd = math.std(htest.fps);
                     let hrmean = math.mean(htest.fps);
@@ -232,6 +233,8 @@ function compareResultToHistory(results){
                             console.log(`FAILED: (${mean} vs ${hrmean} +/- ${hrstd})`);
                         }
                     }
+                }else{
+                    console.log('else?')
                 }
             }
         }
