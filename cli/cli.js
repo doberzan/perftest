@@ -221,17 +221,19 @@ function compareResultToHistory(results){
                         console.log(`FAILED: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }
                 }else if(rtest.loadTime){
-                    console.log('loadtimesåå')
                     for(var result in rtest){
                         let hrstd = math.std(htest[result]);
                         let hrmean = math.mean(htest[result]);
                         let mean = math.mean(rtest[result]);
+                        hrmean = round(hrmean,2);
+                        mean = round(mean,2);
+                        hrstd = round(hrstd, 4)
                         if(mean > hrmean - hrstd){
-                            resultfile.write(`- ${test} - OK (${mean} vs ${hrmean} +/- ${hrstd})\n`);
-                            console.log(`OK: (${mean} vs ${hrmean} +/- ${hrstd})`);
+                            resultfile.write(`- ${result} - OK (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
+                            console.log(`OK: (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }else{
-                            resultfile.write(`- ${test} - **FAILED** (${mean} vs ${hrmean} +/- ${hrstd})\n`);
-                            console.log(`FAILED: (${mean} vs ${hrmean} +/- ${hrstd})`);
+                            resultfile.write(`- ${result} - **FAILED** (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
+                            console.log(`FAILED: (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }
                     }
                 }else{
