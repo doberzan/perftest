@@ -199,6 +199,7 @@ function compareResultToHistory(results){
     let history = getHistory();
     let raw = results;
     let resultfile = fs.createWriteStream('results.md');
+    let status = true;
     for(var agent in raw){
         resultfile.write(`## ${agent}\n`);
         if(history[agent]){
@@ -220,6 +221,7 @@ function compareResultToHistory(results){
                         resultfile.write(`- ${test} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`OK: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }else{
+                        status = false;
                         resultfile.write(`- ${test} - **FAILED** (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`FAILED: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }
@@ -235,6 +237,7 @@ function compareResultToHistory(results){
                             resultfile.write(`- ${result} - OK (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
                             console.log(`OK: (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }else{
+                            status = false;
                             resultfile.write(`- ${result} - **FAILED** (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
                             console.log(`FAILED: (${mean}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }
@@ -242,6 +245,11 @@ function compareResultToHistory(results){
                 }else{
                     console.log('else?')
                 }
+            }
+            if(status){
+                resultfile.write('***PASSED***')
+            }else{
+                resultfile.write('***FAILED***')
             }
         }
     }
