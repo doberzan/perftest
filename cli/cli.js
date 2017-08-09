@@ -274,6 +274,7 @@ class sendCMD extends Command {
             });
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
+                console.log(results.ipad.modernTest1)
                 if(params.prtest){
                     compareResultToHistory(results);
                 }else{
