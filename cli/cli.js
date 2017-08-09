@@ -216,6 +216,7 @@ function compareResultToHistory(results){
                 console.log(rtest, " ::: ", result);
                 console.log(hrstd);
             }else{
+                console.log('other');
                 /*
                 for(var result in rtest){
                     if(ht[result]){
