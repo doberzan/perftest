@@ -200,6 +200,7 @@ function compareResultToHistory(results){
     let raw = results;
     let resultfile = fs.createWriteStream('results.md');
     for(var agent in raw){
+        resultfile.write(`## ${agent}\n`);
         if(history[agent]){
             var ha = history[agent] 
             var ra = raw[agent];
@@ -211,8 +212,10 @@ function compareResultToHistory(results){
                     let hrmean = math.mean(htest.fps);
                     let fpsmean = math.mean(rtest.fps);
                     if(fpsmean > hrmean - hrstd){
-                        console.log(`PASSED: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
+                        resultfile.write(`- ${rtest} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
+                        console.log(`OK: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }else{
+                        resultfile.write(`- ${rtest} - **FAILED** (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`FAILED: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }
                 }else{
@@ -266,13 +269,6 @@ class sendCMD extends Command {
                // console.log(data);
             });
         }else{
-            let logfile = fs.createWriteStream('RESULTS.md');
-            fs.access(params.app, function(e){
-                if(e){
-                    console.error('Warning! WebApp does not exist');
-                }
-            });
-
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 if(params.prtest){
                     compareResultToHistory(results);
@@ -280,7 +276,6 @@ class sendCMD extends Command {
                     saveResultsToHistory(results, params.reset);
                 }
                 for(let agent in results) {
-                    logfile.write('# ' + agent.toUpperCase() + '\n');
                     console.log('# ' + agent.toUpperCase());
                     //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
@@ -294,19 +289,13 @@ class sendCMD extends Command {
                         console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         if(a[test].comment){
                             console.log(' - ' + 'COMMENTS: ' + a[test].comment);
-                            logfile.write(' - ' + 'COMMENTS: ' + a[test].comment + '\n');
                         }
                         console.log('## ' + test);
                         console.log(' - ' + 'MIN: ' + a[test].min);
                         console.log(' - ' + 'AVG: ' + a[test].avg);
                         console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
-                        logfile.write('## ' + test + '\n');
-                        logfile.write(' - ' + 'MIN: ' + a[test].min + '\n');
-                        logfile.write(' - ' + 'AVG: ' + a[test].avg + '\n');
-                        logfile.write(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n\n');
                     }
                 }
-                logfile.end();
             });
         }
     }
