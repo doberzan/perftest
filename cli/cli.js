@@ -204,10 +204,11 @@ function compareResultToHistory(results){
         if(history[agent]){
             var ha = history[agent] 
             var ra = raw[agent];
+            console.log("looping agent:",test);
             for(var test in ra){
                 var htest = ha[test] 
                 var rtest = ra[test];
-                console.log(rtest);
+                console.log("looping test:",test);
                 if(rtest.fps){
                     let hrstd = math.std(htest.fps);
                     let hrmean = math.mean(htest.fps);
