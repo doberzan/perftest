@@ -214,7 +214,7 @@ function compareResultToHistory(results){
                     let hrmean = math.mean(htest.fps);
                     let fpsmean = math.mean(rtest.fps);
                     hrmean = round(hrmean,1);
-                    mean = round(mean,1);
+                    fpsmean = round(fpsmean,1);
                     hrstd = round(hrstd, 1)
                     if(fpsmean > hrmean - hrstd){
                         resultfile.write(`- ${test} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
