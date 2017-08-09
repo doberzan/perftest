@@ -221,7 +221,13 @@ function compareResultToHistory(results){
             var htest = ha[test] 
             var rtest = ra[test];
             if(rtest.fps){
-                let hrstd = math.std(rtest.fps);
+                let hrstd = math.std(htest.fps);
+                let hrmean = math.mean(htest.fps);
+                if(rtest.fps > hrmean){
+                    console.log('PASSED:', hrmean)
+                }else{
+                    console.log('FAILED:', hrmean)
+                }
                 console.log(rtest, " ::: ", result);
                 console.log(hrstd);
             }else{
