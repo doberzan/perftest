@@ -180,7 +180,7 @@ function updateHistory(results, history){
             var ht = ha[test] || (ha[test] = {});
             var rtest = ra[test];
             for(var result in rtest){
-                if(test.log){
+                if(rtest.log){
                     delete rtest.log;
                 }
                 var hr = ht[result] || (ht[result] = [])
