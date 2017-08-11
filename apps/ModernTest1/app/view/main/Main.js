@@ -61,77 +61,125 @@ Ext.define('ModernTest1.view.main.Main', {
     }]
 });
 
-Ext.define('ModernTest1.view.main.Renderer', {
-    extend: 'Ext.panel.Panel',
-    xtype: 'line-renderer',
-    controller: 'line-renderer',
-
+/**
+ * Demonstrates how to use Ext.chart.series.Radar
+ */
+Ext.define('ModernTest1.view.main.Radar', {
+    extend: 'Ext.Panel',
     requires: [
-        'Ext.chart.series.Line',
+        'Ext.chart.PolarChart',
+        'Ext.Toolbar',
+        'Ext.TitleBar',
+        'Ext.chart.series.Radar',
         'Ext.chart.axis.Numeric',
-        'Ext.draw.modifier.Highlight',
-        'Ext.chart.axis.Time',
-        'Ext.chart.interactions.ItemHighlight'
+        'Ext.chart.axis.Category',
+        'Ext.chart.interactions.Rotate'
     ],
 
+    controller: {
+        type: 'chart'
+    },
+
+    
     layout: 'fit',
-
-    width: 650,
-
-    tbar: [
-        '->',
-        {
-            text: 'Refresh',
-            handler: 'onRefresh'
-        }
-    ],
+    shadow: true,
 
     items: [{
-        xtype: 'cartesian',
-        reference: 'chart',
-        width: '100%',
-        height: 500,
+        xtype: 'toolbar',
+        docked: 'top',
+        cls: 'charttoolbar',
+        items: [{
+            xtype: 'spacer'
+        }, {
+            iconCls: 'x-fa fa-picture-o',
+            text: 'Theme',
+            handler: 'onThemeChange'
+        }, {
+            iconCls: 'x-fa fa-refresh',
+            text: 'Refresh',
+            handler: 'onRefresh'
+        }]
+    }, {
+        xtype: 'polar',
         store: {
-            type: 'pie'
+            type: 'orderitems',
+            numRecords: 15
         },
-        interactions: {
-            type: 'panzoom',
-            zoomOnPanGesture: true
+        background: 'white',
+        interactions: 'rotate',
+        legend: {
+            position: 'bottom'
         },
-        series: [
-            {
-                type: 'line',
-                xField: 'name',
-                yField: 'g1',
-                fill: true,
-                smooth: true,
-                style: {
-                    lineWidth: 4
-                },
-                marker: {
-                    type: 'circle',
-                    radius: 10,
-                    lineWidth: 2
-                },
-                renderer: 'onSeriesRender'
+        series: [{
+            type: 'radar',
+            title: 'G1',
+            xField: 'id',
+            yField: 'g1',
+            style: {
+                lineWidth: 4,
+                fillOpacity: 0.3
             }
-        ],
-        axes: [
-            {
-                type: 'numeric',
-                position: 'left',
-                fields: ['g1'],
-                minimum: 0,
-                listeners: {
-                    rangechange: 'onAxisRangeChange'
-                }
+        }, {
+            type: 'radar',
+            title: 'G2',
+            xField: 'id',
+            yField: 'g2',
+            style: {
+                lineWidth: 4,
+                fillOpacity: 0.3
+            }
+        }],
+        axes: [{
+            type: 'numeric',
+            position: 'radial',
+            fields: ['g1', 'g2'],
+            grid: true,
+            style: {
+                estStepSize: 20
             },
-            {
-                type: 'category',
-                position: 'bottom',
-                fields: 'name'
+            label: {
+                fill: 'black'
+            },
+            limits: {
+                value: 500,
+                line: {
+                    strokeStyle: 'red',
+                    lineDash: [6, 3],
+                    title: {
+                        text: "Limit #1"
+                    }
+                }
             }
-        ]
+        }, {
+            type: 'category',
+            position: 'angular',
+            margin: 20,
+            fields: 'id',
+            grid: true,
+            style: {
+                estStepSize: 2
+            },
+            label: {
+                fill: 'black'
+            },
+            limits: [{
+                value: 12,
+                line: {
+                    strokeStyle: 'green',
+                    lineWidth: 3,
+                    lineDash: [6, 3],
+                    title: {
+                        text: 'Limit #2',
+                        fontSize: 14
+                    }
+                }
+            }, {
+                value: 7,
+                line: {
+                    strokeStyle: 'green',
+                    lineWidth: 3
+                }
+            }]
+        }]
     }]
-
 });
