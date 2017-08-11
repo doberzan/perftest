@@ -10,6 +10,7 @@ var a = 1103515245;
 var c = 12345;
 var m = Math.pow(2,31);
 var rand = 0;
+var tps = []
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
@@ -46,15 +47,16 @@ function getRandomArbitrary(min, max) {
 function teleportScrolling(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
-    if(eventStopWatch('getTime', timerid) > 1000){
+    if(eventStopWatch('getTime', timerid) > 4000){
         console.log(FPS);
         var sec = eventStopWatch('stop', timerid);
         console.log(sec);
-        return calculate(`Time: ${timerid}`);
+        return calculate(`TP's: ${tps}`);
     }
     x = (a*x +c) % m
     rand = x/m
     rand = round(getRandomArbitrary(0, 10000));
+    tp.push(rand);
     scroller.scrollTo(0,rand);
 }
 
