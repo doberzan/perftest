@@ -186,7 +186,7 @@ function start(){
         nop:function(){
             num ++;
             console.log('nop num: ' + num);
-            if(num > 1){
+            if(num == 1){
                 location.href = '/park/';
                 num = 0;
             }
