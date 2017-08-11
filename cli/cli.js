@@ -297,20 +297,21 @@ class sendCMD extends Command {
                     saveResultsToHistory(results, params.reset);
                 }
                 for(let agent in results) {
+                    var agentobj = results[agentobj];
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
-                        console.log(test);
-                        if(test.loadTime){
+                        var testobj = agentobj[testobj]; 
+                        if(testobj.loadTime){
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
-                        }else if(test.log){
+                        }else if(testobj.log){
                             console.log(agent + ' - ' + test+':');
                             for(let a in test.log){
                                 console.log('[LOG]:', a);
                             }
-                        }else if(test.fps){
+                        }else if(testobj.fps){
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         }
                     }
