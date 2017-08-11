@@ -13,11 +13,12 @@ var rand = 0;
 var tps = [];
 var log = [];
 
-function TeamCityLog(msg){
+function teamCityLog(msg){
     log.push(msg);
 }
 
 function runTest(test, resolve, reject){
+    log = [];
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
         setTimeout(function(){
@@ -55,7 +56,8 @@ function teleportScrolling(timerid){
     let scroller = cmp.getScrollable();
     if(eventStopWatch('getTime', timerid) > 4000){
         var sec = eventStopWatch('stop', timerid);
-        return calculate(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()} TPs: ${tps}`);
+        teamCityLog(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()} TPs: ${tps}`)
+        return calculate();
     }
     x = (a*x +c) % m
     rand = x/m
@@ -110,7 +112,6 @@ function eventStopWatch(cmd, timerid){
     }else if(cmd == 'stop'){
         var n = timerIds[timerid].num;
         delete timerIds[timerid];
-        console.log(performance.now() - n);
         return performance.now() - n;
     }else if(cmd == 'getTime'){
         var n = timerIds[timerid].num;
@@ -123,7 +124,8 @@ function scrollUp(timerid){
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
         var sec = eventStopWatch('stop', timerid);
-        return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
+        teamCityLog(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
+        return calculate();
     }
     scroller.scrollBy(null, -100);
 }
