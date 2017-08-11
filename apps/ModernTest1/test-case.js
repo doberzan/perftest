@@ -56,7 +56,7 @@ function teleportScrolling(timerid){
     let scroller = cmp.getScrollable();
     if(eventStopWatch('getTime', timerid) > 4000){
         var sec = eventStopWatch('stop', timerid);
-        teamCityLog(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()} TPs: ${tps}`)
+        teamCityLog(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()}`)
         return calculate();
     }
     x = (a*x +c) % m
