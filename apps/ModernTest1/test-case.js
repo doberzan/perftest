@@ -157,6 +157,7 @@ function tick(t){
 }
 
 function start(){
+    localStorage.clear();
     getCommands({
         echo:function(data){
             console.log(data);
