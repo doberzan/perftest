@@ -287,7 +287,7 @@ class sendCMD extends Command {
             }).then(function(data){
                // console.log(data);
             });
-            
+
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 console.log(results)
@@ -306,15 +306,16 @@ class sendCMD extends Command {
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
+                        }else{
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
+                            if(a[test].comment){
+                                console.log(' - ' + 'COMMENTS: ' + a[test].comment);
+                            }
+                            console.log('## ' + test);
+                            console.log(' - ' + 'MIN: ' + a[test].min);
+                            console.log(' - ' + 'AVG: ' + a[test].avg);
+                            console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
                         }
-                        console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
-                        if(a[test].comment){
-                            console.log(' - ' + 'COMMENTS: ' + a[test].comment);
-                        }
-                        console.log('## ' + test);
-                        console.log(' - ' + 'MIN: ' + a[test].min);
-                        console.log(' - ' + 'AVG: ' + a[test].avg);
-                        console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
                     }
                 }
             });
