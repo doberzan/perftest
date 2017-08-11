@@ -300,8 +300,8 @@ class sendCMD extends Command {
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
+                        console.log(test);
                         if(test.loadTime){
-                            console.log(test);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
