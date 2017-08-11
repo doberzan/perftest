@@ -212,6 +212,7 @@ function setup(){
         }
     });
     
+    
     server.listen(port, function(){
         return console.log(plus + blue + ' Started test server at port' + green, port + reset);
         });

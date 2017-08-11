@@ -287,6 +287,7 @@ class sendCMD extends Command {
             }).then(function(data){
                // console.log(data);
             });
+            
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
                 console.log(results)
