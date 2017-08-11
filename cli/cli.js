@@ -291,11 +291,6 @@ class sendCMD extends Command {
 
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                if(params.prtest){
-                    compareResultToHistory(results);
-                }else{
-                    saveResultsToHistory(results, params.reset);
-                }
                 for(let agent in results) {
                     var agentobj = results[agent];
                     for(let test in results[agent]){
@@ -315,6 +310,11 @@ class sendCMD extends Command {
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         }
                     }
+                }
+                if(params.prtest){
+                    compareResultToHistory(results);
+                }else{
+                    saveResultsToHistory(results, params.reset);
                 }
             });
         }
