@@ -176,16 +176,13 @@ function updateHistory(results, history){
     for(var agent in raw){
        var ha = history[agent] || (history[agent] = {}); 
        var ra = raw[agent];
-       console.log("Agent:", ra)
         for(var test in ra){
-            console.log(test);
             var ht = ha[test] || (ha[test] = {});
             var rtest = ra[test];
             for(var result in rtest){
                 if(test.log){
                     delete test.log;
                 }
-                console.log(result);
                 var hr = ht[result] || (ht[result] = [])
                 var rr = rtest[result];
                 if(hr.length >= 100){
@@ -208,11 +205,9 @@ function compareResultToHistory(results){
         if(history[agent]){
             var ha = history[agent] 
             var ra = raw[agent];
-            console.log("looping agent:", agent);
             for(var test in ra){
                 var htest = ha[test] 
                 var rtest = ra[test];
-                console.log("looping test:",test);
                 if(rtest.fps){
                     let hrstd = math.std(htest.fps);
                     let hrmean = math.mean(htest.fps);
@@ -283,7 +278,7 @@ function saveResultsToHistory(results, reset){
 
 class sendCMD extends Command {
     execute (params) {
-        console.log(params)
+        console.log('Params:',params)
         if(params.tests == 'listagents'){
             fetch(params.server, '/~api/cmd/',{
                 cmd:{
