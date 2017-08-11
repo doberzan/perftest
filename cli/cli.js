@@ -263,6 +263,9 @@ function round(num, place) {
     return Math.round(num * p) / p;
 }
 
+function getRandomArbitrary(min, max) {
+  return rand * (max - min) + min;
+}
 
 function saveResultsToHistory(results, reset){
     let history = updateHistory(results, reset ? {} : getHistory());

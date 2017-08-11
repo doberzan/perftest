@@ -5,6 +5,11 @@ let num = 0;
 let timerIds = {}
 let lastId = 0;
 let pageLoadTime = 0;
+var x = 0;
+var a = 1103515245;
+var c = 12345;
+var m = Math.pow(2,31);
+var rand = 0;
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
@@ -29,6 +34,15 @@ function runTest(test, resolve, reject){
 
 }
 
+function round(num, place) {
+    let p = Math.pow(10, place || 0);
+    return Math.round(num * p) / p;
+}
+
+function getRandomArbitrary(min, max) {
+  return rand * (max - min) + min;
+}
+
 function teleportScrolling(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
@@ -38,8 +52,9 @@ function teleportScrolling(timerid){
         console.log(sec);
         return calculate(`Time: ${timerid}`);
     }
-    var rand = Math.floor(Math.random() * 500000);
-    console.log(rand);
+    x = (a*x +c) % m
+    rand = x/m
+    rand = round(getRandomArbitrary(0, 10000));
     scroller.scrollTo(0,rand);
 }
 

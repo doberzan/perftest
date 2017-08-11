@@ -8,8 +8,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceRoot}/WebServer.js"
+            "name": "math-test",
+            "program": "${workspaceRoot}/math-test.js"
         },
         {
             "type": "node",
