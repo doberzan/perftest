@@ -304,14 +304,13 @@ class sendCMD extends Command {
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
-                        }else{
-                            console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
-                            if(a[test].log){
-                                console.log(agent + ' - ' + test+':');
-                                for(let a in a[test].log){
-                                    console.log('[LOG]:', a);
-                                }
+                        }else if(test.log){
+                            console.log(agent + ' - ' + test+':');
+                            for(let a in a[test].log){
+                                console.log('[LOG]:', a);
                             }
+                        }else if(test.fps){
+                            console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         }
                     }
                 }
