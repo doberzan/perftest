@@ -128,7 +128,6 @@ function scrollUp(timerid){
         return calculate();
     }
     scroller.scrollBy(null, -100);
-    teamCityLog(localStorage);
 }
 
 function loadTest(timerid){
@@ -158,6 +157,10 @@ function tick(t){
 }
 
 function start(){
+    teamCityLog('LocalStorage len: ', localStorage.length, 'keys:');
+    for(let i = 0; i < localStorage.length; ++i){
+        teamCityLog(localStorage.key(i));
+    }
     localStorage.clear();
     getCommands({
         echo:function(data){
