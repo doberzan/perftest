@@ -67,7 +67,6 @@ Ext.define('ModernTest1.view.main.Renderer', {
     controller: 'line-renderer',
 
     requires: [
-        'Ext.chart.CartesianChart',
         'Ext.chart.series.Line',
         'Ext.chart.axis.Numeric',
         'Ext.draw.modifier.Highlight',
