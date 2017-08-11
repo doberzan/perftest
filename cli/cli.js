@@ -237,7 +237,6 @@ function compareResultToHistory(results){
                         }else{
                             status = false;
                             resultfile.write(`- ${result} - **FAILED** (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
-                            resultfile.write(`**Required retest!**`);
                             console.log(`FAILED: (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }
                     }
@@ -253,6 +252,7 @@ function compareResultToHistory(results){
     }else{
         resultfile.write('# Status\n');
         resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png" alt="Failed" width="20" height="20">    ***FAILED*** \n')
+        resultfile.write(`**Required retest!**`);
     }
     resultfile.end();
 
