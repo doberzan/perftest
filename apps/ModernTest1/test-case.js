@@ -156,6 +156,7 @@ function tick(t){
     }
 }
 
+
 function start(){
     teamCityLog('LocalStorage len: ', localStorage.length, 'keys:');
     for(let i = 0; i < localStorage.length; ++i){
