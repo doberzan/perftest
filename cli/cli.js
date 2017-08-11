@@ -301,12 +301,13 @@ class sendCMD extends Command {
                         var a = results[agent];
                         var fps = a[test].avg;
                         if(test.loadTime){
+                            console.log(test);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.readyTime>' value='${a[test].readyTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.loadTime>' value='${a[test].loadTime}']`);
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
                         }else if(test.log){
                             console.log(agent + ' - ' + test+':');
-                            for(let a in a[test].log){
+                            for(let a in test.log){
                                 console.log('[LOG]:', a);
                             }
                         }else if(test.fps){
