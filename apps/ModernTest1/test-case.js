@@ -13,8 +13,10 @@ var rand = 0;
 var tps = [];
 var log = [];
 
-function teamCityLog(msg){
+function teamCityLog(){
+    var msg = Array.prototype.join.call(arguments, " "); 
     log.push(msg);
+    console.log(msg);
 }
 
 function runTest(test, resolve, reject){
@@ -158,7 +160,7 @@ function tick(t){
 
 
 function start(){
-    teamCityLog('LocalStorage len: ', localStorage.length, 'keys:');
+    teamCityLog('LocalStorage len: ' + localStorage.length, 'keys:');
     for(let i = 0; i < localStorage.length; ++i){
         teamCityLog(localStorage.key(i));
     }
