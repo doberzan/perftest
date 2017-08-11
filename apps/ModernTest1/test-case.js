@@ -53,7 +53,7 @@ function teleportScrolling(timerid){
     }
     x = (a*x +c) % m
     rand = x/m
-    rand = round(getRandomArbitrary(0, scroller.getMaxPosition().y));
+    rand = round(getRandomArbitrary(0, 150000));
     tps.push(rand);
     scroller.scrollTo(0,rand);
 }
@@ -68,7 +68,7 @@ function scrollDown(timerid){
     //let rand2 = Math.floor(Math.random() * 500);
     scroller.scrollBy(null, 100);
 }
-
+//log out maxy pos beginning of each test
 //Calculates data
 function calculate(comments){
     let min = 9999999;
