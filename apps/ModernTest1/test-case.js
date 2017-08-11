@@ -1,3 +1,16 @@
+let PerfTest = {
+    _log:[],
+    log:function(){
+        var msg = Array.prototype.join.call(arguments, " "); 
+        PerfTest._log.push(msg);
+        console.log(msg);
+    },
+    getLog:function(){
+        let log = PerfTest._log;
+        PerfTest._log = [];
+        return log;
+    }
+}
 let timebase;
 let tickCount = 0;
 let FPS = [];
@@ -5,19 +18,6 @@ let num = 0;
 let timerIds = {}
 let lastId = 0;
 let pageLoadTime = 0;
-var x = 41;
-var a = 1103515245;
-var c = 12345;
-var m = Math.pow(2,31);
-var rand = 0;
-var tps = [];
-var log = [];
-
-function teamCityLog(){
-    var msg = Array.prototype.join.call(arguments, " "); 
-    log.push(msg);
-    console.log(msg);
-}
 
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
@@ -48,8 +48,21 @@ function round(num, place) {
     return Math.round(num * p) / p;
 }
 
+function makeRandom(){
+    var x = 41;
+    var a = 1103515245;
+    var c = 12345;
+    var m = Math.pow(2,31);
+    return function(){
+        x = (a*x +c) % m;
+        return x/m;
+    }
+}
+let getRandom = makeRandom();
+
 function getRandomArbitrary(min, max) {
-  return rand * (max - min) + min;
+    let rand = getRandom();
+    return rand * (max - min) + min;
 }
 
 function teleportScrolling(timerid){
@@ -57,13 +70,10 @@ function teleportScrolling(timerid){
     let scroller = cmp.getScrollable();
     if(eventStopWatch('getTime', timerid) > 4000){
         var sec = eventStopWatch('stop', timerid);
-        teamCityLog(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()}`)
+        PerfTest.log(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()}`)
         return calculate();
     }
-    x = (a*x +c) % m
-    rand = x/m
-    rand = round(getRandomArbitrary(0, 150000));
-    tps.push(rand);
+    let rand = round(getRandomArbitrary(0, 150000));
     scroller.scrollTo(0,rand);
 }
 
@@ -72,7 +82,7 @@ function scrollDown(timerid){
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         var sec = eventStopWatch('stop', timerid);
-        teamCityLog('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.');
+        PerfTest.log('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.');
         return calculate();
     }
     //let rand2 = Math.floor(Math.random() * 500);
@@ -94,13 +104,12 @@ function calculate(){
         sum += j;
     }
     avg = sum / fps.length;
-    let log1 = log;
-    log = [];
+    let log = PerfTest.getLog();
     return {
         min:min,
         avg:avg,
         fps:fps,
-        log:log1
+        log:log
 
     };
 }
@@ -126,7 +135,7 @@ function scrollUp(timerid){
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
         var sec = eventStopWatch('stop', timerid);
-        teamCityLog(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
+        PerfTest.log(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
         return calculate();
     }
     scroller.scrollBy(null, -100);
@@ -160,9 +169,9 @@ function tick(t){
 
 
 function start(){
-    teamCityLog('LocalStorage len: ' + localStorage.length, 'keys:');
+    PerfTest.log('LocalStorage len: ' + localStorage.length, 'keys:');
     for(let i = 0; i < localStorage.length; ++i){
-        teamCityLog(localStorage.key(i));
+        PerfTest.log(localStorage.key(i));
     }
     localStorage.clear();
     getCommands({
