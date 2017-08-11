@@ -53,7 +53,7 @@ function teleportScrolling(timerid){
     }
     x = (a*x +c) % m
     rand = x/m
-    rand = round(getRandomArbitrary(0, 10000));
+    rand = round(getRandomArbitrary(0, scroller.getMaxPosition().y));
     tps.push(rand);
     scroller.scrollTo(0,rand);
 }
