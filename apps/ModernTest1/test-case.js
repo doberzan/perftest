@@ -49,7 +49,7 @@ function teleportScrolling(timerid){
     let scroller = cmp.getScrollable();
     if(eventStopWatch('getTime', timerid) > 4000){
         var sec = eventStopWatch('stop', timerid);
-        return calculate(`TP's: ${tps}`);
+        return calculate(`Row Height: ${cmp.rowHeight} Num of Rows: ${cmp.store.getCount()} TPs: ${tps}`);
     }
     x = (a*x +c) % m
     rand = x/m
