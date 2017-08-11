@@ -128,6 +128,7 @@ function scrollUp(timerid){
         return calculate();
     }
     scroller.scrollBy(null, -100);
+    teamCityLog(localStorage);
 }
 
 function loadTest(timerid){
