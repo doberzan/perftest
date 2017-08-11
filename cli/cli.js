@@ -181,7 +181,7 @@ function updateHistory(results, history){
             var rtest = ra[test];
             for(var result in rtest){
                 if(test.log){
-                    delete test.log;
+                    delete rtest.log;
                 }
                 var hr = ht[result] || (ht[result] = [])
                 var rr = rtest[result];
