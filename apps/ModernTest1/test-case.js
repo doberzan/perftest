@@ -18,7 +18,6 @@ function teamCityLog(msg){
 }
 
 function runTest(test, resolve, reject){
-    log = [];
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
         setTimeout(function(){
@@ -93,12 +92,13 @@ function calculate(){
         sum += j;
     }
     avg = sum / fps.length;
-
+    let log1 = log;
+    log = [];
     return {
         min:min,
         avg:avg,
         fps:fps,
-        log:log
+        log:log1
 
     };
 }
