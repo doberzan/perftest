@@ -252,7 +252,7 @@ function compareResultToHistory(results){
     }else{
         resultfile.write('# Status\n');
         resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png" alt="Failed" width="20" height="20">    ***FAILED*** \n')
-        resultfile.write(`**Required retest!**`);
+        resultfile.write(`**Retest required!**`);
     }
     resultfile.end();
 
