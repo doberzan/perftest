@@ -48,15 +48,13 @@ function teleportScrolling(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(eventStopWatch('getTime', timerid) > 4000){
-        console.log(FPS);
         var sec = eventStopWatch('stop', timerid);
-        console.log(sec);
         return calculate(`TP's: ${tps}`);
     }
     x = (a*x +c) % m
     rand = x/m
     rand = round(getRandomArbitrary(0, 10000));
-    tp.push(rand);
+    tps.push(rand);
     scroller.scrollTo(0,rand);
 }
 
@@ -64,9 +62,7 @@ function scrollDown(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
-        console.log(FPS);
         var sec = eventStopWatch('stop', timerid);
-        console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
     }
     //let rand2 = Math.floor(Math.random() * 500);
@@ -119,9 +115,7 @@ function scrollUp(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
     if(0 >= scroller.getPosition().y){
-        console.log(FPS);
         var sec = eventStopWatch('stop', timerid);
-        console.log(sec);
         return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels up in '+ sec +' mili-seconds.'));
     }
     scroller.scrollBy(null, -100);
