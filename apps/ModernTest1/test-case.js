@@ -10,7 +10,13 @@ var a = 1103515245;
 var c = 12345;
 var m = Math.pow(2,31);
 var rand = 0;
-var tps = []
+var tps = [];
+var log = [];
+
+function TeamCityLog(msg){
+    log.push(msg);
+}
+
 function runTest(test, resolve, reject){
     let cmp = Ext.getCmp('thegrid');
     if(!cmp){
@@ -63,14 +69,15 @@ function scrollDown(timerid){
     let scroller = cmp.getScrollable();
     if(scroller.getMaxPosition().y <= scroller.getPosition().y){
         var sec = eventStopWatch('stop', timerid);
-        return calculate(('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.'));
+        teamCityLog('Scrolled '+ scroller.getMaxPosition().y +' pixels down in '+ sec +' mili-seconds.');
+        return calculate();
     }
     //let rand2 = Math.floor(Math.random() * 500);
     scroller.scrollBy(null, 100);
 }
 //log out maxy pos beginning of each test
 //Calculates data
-function calculate(comments){
+function calculate(){
     let min = 9999999;
     let avg;
     let fps = FPS;
@@ -89,7 +96,7 @@ function calculate(comments){
         min:min,
         avg:avg,
         fps:fps,
-        comment:comments
+        log:log
 
     };
 }

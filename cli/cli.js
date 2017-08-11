@@ -182,6 +182,9 @@ function updateHistory(results, history){
             var ht = ha[test] || (ha[test] = {});
             var rtest = ra[test];
             for(var result in rtest){
+                if(test.log){
+                    delete test.log;
+                }
                 console.log(result);
                 var hr = ht[result] || (ht[result] = [])
                 var rr = rtest[result];
@@ -293,15 +296,12 @@ class sendCMD extends Command {
 
         }else{
             return runTests(params.agents, params.tests, params.server, params.app).then(function(results){
-                console.log(results)
                 if(params.prtest){
                     compareResultToHistory(results);
                 }else{
                     saveResultsToHistory(results, params.reset);
                 }
                 for(let agent in results) {
-                    console.log('# ' + agent.toUpperCase());
-                    //console.log('# ' + 'FrameWork Load Time: ' + results[agent].)
                     for(let test in results[agent]){
                         var a = results[agent];
                         var fps = a[test].avg;
@@ -311,13 +311,12 @@ class sendCMD extends Command {
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
                         }else{
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
-                            if(a[test].comment){
-                                console.log(' - ' + 'COMMENTS: ' + a[test].comment);
+                            if(a[test].log){
+                                console.log(agent + ' - ' + test+':');
+                                for(let a in a[test].log){
+                                    console.log('[LOG]:', a);
+                                }
                             }
-                            console.log('## ' + test);
-                            console.log(' - ' + 'MIN: ' + a[test].min);
-                            console.log(' - ' + 'AVG: ' + a[test].avg);
-                            console.log(' - ' + 'FPS: ' + JSON.stringify(a[test].fps) + '\n');
                         }
                     }
                 }
