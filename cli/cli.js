@@ -308,7 +308,7 @@ class sendCMD extends Command {
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.launchTime>' value='${a[test].launchTime}']`);
                         }else if(testobj.log){
                             console.log(agent + ' - ' + test+':');
-                            for(let a in testobj.log){
+                            for(let a of testobj.log){
                                 console.log('[LOG]:', a);
                             }
                         }else if(testobj.fps){
