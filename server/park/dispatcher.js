@@ -62,7 +62,11 @@ function getCommands(handlers, data){
 function getOS() {
     var ua = navigator.userAgent.toLowerCase();
     setTimeout(function(){
-        document.body.innerHTML += "<br>" + navigator.userAgent;
+        let s = navigator.userAgent;
+        
+        s = s.replace(/&/g,'&amp;');
+        s = s.replace(/</g,'&lt;');
+        document.body.innerHTML += "<br>" + s;
     }, 2000);
     if (ua.indexOf("win") != -1) {
         return "win";
