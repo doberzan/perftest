@@ -2,6 +2,8 @@
 
 ## Server Setup
 
+__________________________________________________
+
 You can download from Github by clicking the green "Clone or Download" button. Then
 just click "Download Zip" and save the file to your machine.
 
