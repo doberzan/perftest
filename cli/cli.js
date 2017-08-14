@@ -69,61 +69,44 @@ function serveBuild(server, buildPath, buildUuid){
 function runTestSequence(agent, tests, server, app, buildUuid){
     let results = {};
     let agentUuid = uuidv4();
-    try{
-        let promise = fetch(server, '/~api/cmd/', {
-            agent:agent,
-            cmd:{
-                type:'redirect',
-                data:'/' + buildUuid + '/' + '?id=' + agentUuid
-            }
-        }).then(function(data){
-           // console.log(data)
-        }, function(err){
-            console.log('nope');
-            return 'failed';
-        });
-        if(promise == 'failed'){
-                return results;
+    let promise = fetch(server, '/~api/cmd/', {
+        agent:agent,
+        cmd:{
+            type:'redirect',
+            data:'/' + buildUuid + '/' + '?id=' + agentUuid
         }
-        for(let test of tests){
-            promise = promise.then(function(data){
-                return fetch(server, '/~api/cmd/',{
-                    agent:agentUuid,
-                    cmd:{
-                        type:test,
-                        data:test  
-                    }
-                    
-                }).then(function(data){
-                    results[test] = data;
-                }, function(err){
-                    
-                });
-            }, function(err){
-                console.log('nope3');
-                throw err;
-            });
-        }
-
-        return promise.then(function(){
+    }).then(function(data){
+        console.log(data)
+    });
+    for(let test of tests){
+        promise = promise.then(function(data){
             return fetch(server, '/~api/cmd/',{
                 agent:agentUuid,
                 cmd:{
-                    type:'redirect',
-                    data:'/park/?id=' + agent
+                    type:test,
+                    data:test  
                 }
-            }).then(function(){
-                return results;
-            }, function(err){
-                console.log('nope4');
-                throw err;
+                
+            }).then(function(data){
+                results[test] = data;
             });
-        })
-    }catch(e){
-        console.log('nope5');
-        console.log("Lost connection to agent " + agent + "!");
-        return results;
+        }, function(err){
+            console.log('caught err');
+            throw err;
+        });
     }
+
+    return promise.then(function(){
+        return fetch(server, '/~api/cmd/',{
+            agent:agentUuid,
+            cmd:{
+                type:'redirect',
+                data:'/park/?id=' + agent
+            }
+        }).then(function(){
+            return results;
+        });
+    })
 }
 
 function runTests(agents, tests, server, app){
@@ -267,7 +250,7 @@ class sendCMD extends Command {
     execute (params) {
         console.log('Params:',params)
         if(params.tests == 'listagents'){
-            fetch(params.server, '/~api/cmd/',{
+            return fetch(params.server, '/~api/cmd/',{
                 cmd:{
                     type:'list',
                     data:params.test
