@@ -6,46 +6,38 @@ const math = require('mathjs');
 
 function fetch(server, path, data){
     return new Promise(function(resolve, reject){
-        try{
-            let post_data = JSON.stringify(data);
-            let post_options = {
-                host: server,
-                port: '8080',
-                path: path,
-                method: 'POST',
-                headers: {  
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(post_data)
-                },
-                timeout: 500 * 100
-            };
-            let post_req = client.request(post_options, function(res) {
-                res.setEncoding('utf8');
-                let responseBody = '';
-                res.on('data', function (chunk) {
-                    responseBody += chunk;
-                });
-                
-                res.on('end', function () {
-                    try{
-                        let j = JSON.parse(responseBody);
-                        resolve(j);
-                    }catch(e){
-                        reject('failed');
-                        console.log(e);
-                        console.log('Failed to parse:', responseBody);
-                    }
-                });
-            }).on('error', function(e) {
-                reject('failed');
-                console.log("Got error: " + e.message);
-            });;
+        let post_data = JSON.stringify(data);
+        let post_options = {
+            host: server,
+            port: '8080',
+            path: path,
+            method: 'POST',
+            headers: {  
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(post_data)
+            },
+            timeout: 500 * 100
+        };
+        let post_req = client.request(post_options, function(res) {
+            res.setEncoding('utf8');
+            let responseBody = '';
+            res.on('data', function (chunk) {
+                responseBody += chunk;
+            });
+            
+            res.on('end', function () {
+                try{
+                    let j = JSON.parse(responseBody);
+                    resolve(j);
+                }catch(e){
+                    reject('failed');
+                    console.log(e);
+                    console.log('Failed to parse:', responseBody);
+                }
+            });
+        });
 
-            post_req.write(post_data);
-        }catch(e){
-            console.log(e);
-            reject('failed');
-        }
+        post_req.write(post_data);
     });
 }
 
