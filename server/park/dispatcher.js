@@ -74,6 +74,8 @@ function getOS() {
         return "iphone";
     } else if (ua.indexOf("macintosh") != -1) {
         return 'mac';
+    }else if(ua.indexOf('android') != -1){
+        return "android";
     } else if (ua.indexOf("linux") != -1) {
         return "linux";
     } else if (ua.indexOf("x11") != -1) {
