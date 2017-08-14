@@ -97,22 +97,9 @@ function runTestSequence(agent, tests, server, app, buildUuid){
                 }).then(function(data){
                     results[test] = data;
                 }, function(err){
-                    return {
-                        min:0,
-                        avg:0,
-                        fps:[0],
-                        load:0,
-                        comment:'Lost connection to agent'
-                    };
+                    
                 });
             }, function(err){
-                results[test] = {
-                        min:0,
-                        avg:0,
-                        fps:[0],
-                        load:0,
-                        comment:'Lost connection to agent'
-                    };
                 console.log('nope3');
                 throw err;
             });
@@ -135,8 +122,7 @@ function runTestSequence(agent, tests, server, app, buildUuid){
     }catch(e){
         console.log('nope5');
         console.log("Lost connection to agent " + agent + "!");
-        promise = results;
-        return promise;
+        return results;
     }
 }
 
@@ -247,10 +233,10 @@ function compareResultToHistory(results){
         }
     }
     if(status){
-            resultfile.write('# Status\n');
+            resultfile.write('_____________________________________________\n');
             resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/pass.png" alt="Passed" width="20" height="20">    ***PASSED***\n')   
     }else{
-        resultfile.write('# Status\n');
+        resultfile.write('_____________________________________________\n');
         resultfile.write('<img src="https://raw.githubusercontent.com/doberzan/perftest/master/cli/fail.png" alt="Failed" width="20" height="20">    ***FAILED*** \n')
         resultfile.write(`**Retest required!**`);
     }
