@@ -161,7 +161,7 @@ function compareResultToHistory(results){
     let raw = results;
     let resultfile = fs.createWriteStream('results.md');
     let status = true;
-    let tolerance = 2;
+    let tolerance = 3;
     for(var agent in raw){
         resultfile.write(`## ${agent}\n`);
         if(history[agent]){
