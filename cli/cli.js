@@ -268,7 +268,8 @@ class sendCMD extends Command {
                             for(let a of testobj.log){
                                 console.log('[LOG]:', a);
                             }
-                        }else if(testobj.fps){
+                        }
+                        if(testobj.fps){
                             console.log(`##teamcity[buildStatisticValue key='<${agent}.${test}.fps>' value='${fps}']`);
                         }
                     }
