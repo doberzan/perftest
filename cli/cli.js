@@ -176,7 +176,7 @@ function compareResultToHistory(results){
                     hrmean = round(hrmean,1);
                     fpsmean = round(fpsmean,1);
                     hrstd = round(hrstd, 1)
-                    if(fpsmean > hrmean - hrstd){
+                    if(fpsmean >= hrmean - hrstd){
                         resultfile.write(`- ${test} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`OK: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
                     }else{
@@ -192,7 +192,7 @@ function compareResultToHistory(results){
                         hrmean = round(hrmean,2);
                         num = round(num,2);
                         hrstd = round(hrstd, 4)
-                        if(num < hrmean + hrstd){
+                        if(num <= hrmean + hrstd){
                             resultfile.write(`- ${result} - OK (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)\n`);
                             console.log(`OK: (${num}ms vs ${hrmean}ms +/- ${hrstd}ms)`);
                         }else{
