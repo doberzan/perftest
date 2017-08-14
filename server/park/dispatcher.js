@@ -61,6 +61,7 @@ function getCommands(handlers, data){
 
 function getOS() {
     var ua = navigator.userAgent.toLowerCase();
+    PerfTest.log(navigator.userAgent);
     if (ua.indexOf("win") != -1) {
         return "win";
     } else if (ua.indexOf("iphone") != -1) {
