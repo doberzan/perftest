@@ -227,15 +227,11 @@ function setup(){
   }
 
 
-if (process.argv.length < 4) {
+if (process.argv.length < 3) {
     console.log(red + '[!] Not enough arguments! Syntax: node WebServer.js <port>');
     console.log(reset);
 } else {
     port = process.argv[2];
-    duration = +process.argv[3];
-    setTimeout(function(){
-        process.exit(0);
-    }, duration * 60 * 1000);
     setup();
     console.log(reset);
 }
