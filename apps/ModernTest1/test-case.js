@@ -77,6 +77,17 @@ function teleportScrolling(timerid){
     scroller.scrollTo(0,rand);
 }
 
+function clickItems(){
+    var grid = Ext.ComponentMgr.all.filterBy(function(c){
+	    return c.isXType('grid');
+    });
+    var columns = grid.down('headercontainer').getGridColumns();
+    for(let col in columns){
+        columns
+    }
+}
+
+
 function scrollDown(timerid){
     let cmp = Ext.getCmp('thegrid');
     let scroller = cmp.getScrollable();
