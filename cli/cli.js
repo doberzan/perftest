@@ -295,6 +295,14 @@ RunTests.define({
 class Shutdown extends Command {
     execute(params){
         console.log(params);
+        return fetch(params.server, '/~api/cmd/',{
+            cmd:{
+                type:'shutdown',
+                data:{}
+            }
+        }).then(function(data){
+            console.log(data);
+        });
     }
 }
 

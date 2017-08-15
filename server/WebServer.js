@@ -138,6 +138,14 @@ function cliForwardMSG(msg, res, req){
             }
         }
         res.end(JSON.stringify(agentsByID));
+    }
+    else if(cmdObj.cmd.type == 'shutdown'){
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end('null');
+        console.log("Received Shutdown!");
+        setTimeout(function(){
+            process.exit(0);   
+        },250);
     }else if(cmdObj.cmd.type == 'serve'){
         console.log(cmdObj.cmd.data);
         fs.access(cmdObj.cmd.data, function(e){
