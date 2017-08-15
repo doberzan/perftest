@@ -174,10 +174,10 @@ function compareResultToHistory(results){
                     let hrstd = math.std(htest.fps);
                     let hrmean = math.mean(htest.fps);
                     let fpsmean = math.mean(rtest.fps);
+                    hrstd *= tolerance;
                     hrmean = round(hrmean,1);
                     fpsmean = round(fpsmean,1);
                     hrstd = round(hrstd, 1)
-                    hrstd *= tolerance;
                     if(fpsmean >= hrmean - hrstd){
                         resultfile.write(`- ${test} - OK (${fpsmean} vs ${hrmean} +/- ${hrstd})\n`);
                         console.log(`OK: (${fpsmean} vs ${hrmean} +/- ${hrstd})`);
@@ -191,6 +191,7 @@ function compareResultToHistory(results){
                         let hrstd = math.std(htest[result]);
                         let hrmean = math.mean(htest[result]);
                         let num = rtest[result];
+                        hrstd *= tolerance;
                         hrmean = round(hrmean,2);
                         num = round(num,2);
                         hrstd = round(hrstd, 4)
