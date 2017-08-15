@@ -6,7 +6,6 @@ const http = require('http');
 const finalhandler = require('finalhandler');
 const Agent = require('./Agent.js');
 
-const payload = '<script id="script1" type="text/javascript" src="hack.js"></script></head>';
 let port = 8080;
 let duration = 0;
 let reset = "\x1b[0m", green = "\x1b[32m", red = "\x1b[31m", blue = "\x1b[34m", black = "\x1b[1m" + "\x1b[30m";
@@ -215,7 +214,7 @@ function setup(){
     
 
     server.listen(port, function(){
-        return console.log(plus + blue + ' Started test server at port' + green, port + reset);
+        return console.log(plus + blue + ' Started test server on port' + green, port + reset);
         });
   }
 
