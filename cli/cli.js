@@ -1,4 +1,4 @@
-const Command = require('switchit').Command;
+const { Command, Container } = require('switchit');
 const client = require('http');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
@@ -241,7 +241,7 @@ function saveResultsToHistory(results, reset){
 }
 
 
-class sendCMD extends Command {
+class RunTests extends Command {
     execute (params) {
         console.log('Params:',params)
         if(params.tests == 'listagents'){
@@ -287,9 +287,29 @@ class sendCMD extends Command {
     }
 }
 
-sendCMD.define({
+RunTests.define({
     switches:'server agents tests app [reset:boolean=false] [prtest:boolean=false]',
     parameters: ['server', 'agents', 'tests', 'app']
 });
 
-new sendCMD().run();
+class Shutdown extends Command {
+    execute(params){
+        console.log(params);
+    }
+}
+
+Shutdown.define({
+    switches:'server',
+    parameters: ['server']
+});
+
+class RootCmd extends Container {}
+
+RootCmd.define({
+    commands:{
+        runTests: RunTests,
+        shutdown: Shutdown
+    }
+})
+
+new RootCmd().run();
